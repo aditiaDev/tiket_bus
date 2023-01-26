@@ -50,6 +50,12 @@
                   <p>Kategori Nilai</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url("pelanggan/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PELANGGAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pelanggan</p>
+                </a>
+              </li>
             </ul>
           </li>
           
@@ -63,15 +69,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-              <a href="<?php echo base_url("pembelian/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMBELIAN"){echo 'active';}?>">
+              <a href="<?php echo base_url("penjualan/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pembelian</p>
+                  <p>Penjualan Tiket</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?php echo base_url("penjualan/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
+                <a href="<?php echo base_url("pembayaran/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMBAYARAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Penjualan</p>
+                  <p>Pembayarn Tiket</p>
                 </a>
               </li>
               

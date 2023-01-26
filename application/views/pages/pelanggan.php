@@ -18,11 +18,12 @@
                 <thead>
                 <tr>
                   <th style="width: 25px;">No.</th>
+                  <th>ID Pelanggan</th>
+                  <th>ID User</th>
                   <th>Nama</th>
                   <th>Telp</th>
                   <th>Alamat</th>
                   <th>Username</th>
-                  <th>Password</th>
                   <th style="min-width: 120px;">Action</th>
                 </tr>
                 </thead>
@@ -61,14 +62,14 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Telp/No. HP</label>
-                      <input type="text" class="form-control" name="no_tlp">
+                      <input type="text" class="form-control" name="no_pelanggan">
                     </div>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label>Alamat</label>
-                  <textarea class="form-control" name="alamat" rows="3"></textarea>
+                  <textarea class="form-control" name="alamat_pelanggan" rows="3"></textarea>
                 </div>
 
                 <div class="row">
@@ -161,8 +162,8 @@
                   return meta.row + meta.settings._iDisplayStart + 1;
               }
           },
-          { "data": "nm_pelanggan" },
-          { "data": "no_tlp" },{ "data": "alamat" },{ "data": "username" },{ "data": "password" },
+          { "data": "id_pelanggan" },{ "data": "id_user" },{ "data": "nm_pelanggan" },
+          { "data": "no_pelanggan" },{ "data": "alamat_pelanggan" },{ "data": "username" },
           { "data": null, 
             "render" : function(data){
               return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
@@ -209,8 +210,8 @@
     console.log(id_user)
     $("#modal_add .modal-title").text('Edit Data')
     $("[name='nm_pelanggan']").val(data.nm_pelanggan)
-    $("[name='no_tlp']").val(data.no_tlp)
-    $("[name='alamat']").val(data.alamat)
+    $("[name='no_pelanggan']").val(data.no_pelanggan)
+    $("[name='alamat_pelanggan']").val(data.alamat_pelanggan)
     $("[name='username']").val(data.username)
     $("[name='password']").val(data.password)
     $("#modal_add").modal('show')

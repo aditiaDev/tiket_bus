@@ -6,8 +6,8 @@ class Penjualan extends CI_Controller {
   public function __construct(){
     parent::__construct();
 
-    if(!$this->session->userdata('id_user'))
-      redirect('login', 'refresh');
+    // if(!$this->session->userdata('id_user'))
+    //   redirect('login', 'refresh');
   }
 
   public function index(){
@@ -18,28 +18,31 @@ class Penjualan extends CI_Controller {
   }
 
   public function getAllData(){
-    $this->db->select('a.*, b.nm_pelanggan');
-    $this->db->from('tb_penjualan a'); 
-    $this->db->join('tb_pelanggan b', 'a.id_pelanggan=b.id_pelanggan');
-    $this->db->order_by('a.tgl_jual','desc');         
-    $dataList = $this->db->get()->result(); 
+      
+    $dataList['data'] = $this->db->query("SELECT A.id_penjualan_tiket, A.tgl_pembelian, A.id_tiket_bus, B.tujuan, A.tgl_keberangkatan,
+    A.jumlah_pembelian, A.jenis_penjualan_tiket, C.no_pol
+    FROM tb_penjualan_tiket A
+    INNER JOIN tb_tiket_bus B ON A.id_tiket_bus=B.id_tiket_bus
+    INNER JOIN tb_bus C ON B.id_bus=C.id_bus
+    ORDER BY tgl_pembelian DESC")->result(); 
 
-    $no = 0;
-    $data['data'] = [];
-    foreach ($dataList as $list) {
-      $row = array();
-      $data['data'][$no]['id_penjualan'] = $list->id_penjualan;
-      $data['data'][$no]['id_pelanggan'] = $list->id_pelanggan;
-      $data['data'][$no]['nm_pelanggan'] = $list->nm_pelanggan;
-      $data['data'][$no]['no_nota'] = $list->no_nota;
-      $data['data'][$no]['status'] = $list->status;
-      $data['data'][$no]['tot_penjualan'] = number_format($list->tot_penjualan,0,',','.');
-      $data['data'][$no]['tgl_jual'] = date('d-M-Y', strtotime($list->tgl_jual));
-      $data['data'][$no]['tgl_nota'] = ($list->tgl_nota == "") ? "" : date('d-M-Y', strtotime($list->tgl_nota));
-      $no++;
-    }
+    // $no = 0;
+    // $data['data'] = [];
+    // foreach ($dataList as $list) {
+    //   $row = array();
+    //   $data['data'][$no]['id_penjualan_tiket'] = $list->id_penjualan_tiket;
+    //   $data['data'][$no]['tgl_pembelian'] = date('d-M-Y H:i', strtotime($list->tgl_pembelian));
+    //   $data['data'][$no]['id_tiket_bus'] = $list->id_tiket_bus;
+    //   $data['data'][$no]['tujuan'] = $list->tujuan;
+    //   $data['data'][$no]['tgl_keberangkatan'] = date('d-M-Y H:i', strtotime($list->tgl_keberangkatan));
+    //   $data['data'][$no]['jumlah_pembelian'] = $list->jumlah_pembelian;
+    //   $data['data'][$no]['jenis_penjualan_tiket'] = $list->jenis_penjualan_tiket;
+    //   $data['data'][$no]['no_pol'] = $list->no_pol;
 
-  	echo json_encode($data);
+    //   $no++;
+    // }
+
+  	echo json_encode($dataList);
   }
 
   public function addData(){

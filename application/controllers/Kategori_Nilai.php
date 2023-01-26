@@ -79,8 +79,9 @@ class Kategori_Nilai extends CI_Controller {
     
     
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('id_parameter', 'ID parameter', 'required');
-    $this->form_validation->set_rules('parameter', 'Parameter', 'required');
+    $this->form_validation->set_rules('id_indikator_kepuasan', 'ID indikator kepuasan', 'required');
+    $this->form_validation->set_rules('indikator_kepuasan', 'Indikator kepuasan', 'required');
+    $this->form_validation->set_rules('nilai', 'Nilai', 'required');
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -90,12 +91,13 @@ class Kategori_Nilai extends CI_Controller {
     }
 
     $data = array(
-        "parameter" => $this->input->post('parameter'),
+      "indikator_kepuasan" => $this->input->post('indikator_kepuasan'),
+      "nilai" => $this->input->post('nilai'),
     );
 
 
-    $this->db->where('id_parameter', $this->input->post('id_parameter'));
-    $this->db->update('tb_parameter', $data);
+    $this->db->where('id_indikator_kepuasan', $this->input->post('id_indikator_kepuasan'));
+    $this->db->update('tb_indikator_kepuasan', $data);
     if($this->db->error()['message'] != ""){
       $output = array("status" => "error", "message" => $this->db->error()['message']);
       echo json_encode($output);
@@ -108,8 +110,8 @@ class Kategori_Nilai extends CI_Controller {
 
   public function deleteData(){
 
-    $this->db->where('id_parameter', $this->input->post('id_parameter'));
-    $this->db->delete('tb_parameter');
+    $this->db->where('id_indikator_kepuasan', $this->input->post('id_indikator_kepuasan'));
+    $this->db->delete('tb_indikator_kepuasan');
 
     $output = array("status" => "success", "message" => "Data Berhasil di Hapus");
     echo json_encode($output);

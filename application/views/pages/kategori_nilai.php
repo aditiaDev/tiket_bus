@@ -176,14 +176,14 @@
   }
 
   function editData(data, index){
-    console.log(data)
+    // console.log(data)
     save_method = "edit"
-    id_edit = data.id_parameter;
+    id_edit = data.id_indikator_kepuasan;
 
 
     $("#modal_add .modal-title").text('Edit Data')
-    $("[name='id_parameter']").val(data.id_parameter)
-    $("[name='parameter']").val(data.parameter)
+    $("[name='indikator_kepuasan']").val(data.indikator_kepuasan)
+    $("[name='nilai']").val(data.nilai)
     $("#modal_add").modal('show')
   }
 

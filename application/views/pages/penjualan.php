@@ -9,23 +9,22 @@
         <div class="col-12">
           <div class="card" style="margin-top: 1rem">
             <div class="card-header">
-              <h3 class="card-title">Data Penjualan</h3>
+              <h3 class="card-title">Data Penjualan Tiket</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              
-              <!-- <a href="<?php echo base_url("penjualan/addData/")?>" class="btn btn-sm btn-info" style="margin-bottom: 10px;"><i class="fas fa-plus-circle"></i> Tambah</a> -->
+              <button class="btn btn-sm btn-info" style="margin-bottom: 10px;" id="add_data"><i class="fas fa-plus-circle"></i> Tambah</button>
               <table id="tb_data" class="table table-bordered table-hover" style="font-size: 12px">
                 <thead>
                 <tr>
+                  <th style="width: 25px;">No.</th>
                   <th>ID Penjualan</th>
-                  <th>Tanggal</th>
-                  <th>No nota</th>
-                  <th>Tgl nota</th>
-                  <th>Pelanggan</th>
-                  <th>Total Pembayaran</th>
-                  <th>Status</th>
-                  <th>Detail</th>
+                  <th>Tgl Pembelian</th>
+                  <th>Tujuan</th>
+                  <th>Nopol Bus</th>
+                  <th>Tgl Keberangkatan</th>
+                  <th>Jumlah</th>
+                  <th>Jenis Pembelian</th>
                   <th style="min-width: 120px;">Action</th>
                 </tr>
                 </thead>
@@ -54,24 +53,18 @@
             </div>
             <div class="modal-body">
               
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label>Supplier</label>
-                      <input type="text" class="form-control" name="nm_supplier">
+                      <label>ID Jenis</label>
+                      <input type="text" class="form-control" name="id_jenis_bus" readonly>
                     </div>
                   </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Telp/No. HP</label>
-                      <input type="text" class="form-control" name="no_tlp">
-                    </div>
-                  </div>
-                </div>
+                </div> -->
 
                 <div class="form-group">
-                  <label>Alamat</label>
-                  <textarea class="form-control" name="alamat" rows="3"></textarea>
+                  <label>Jenis Bus</label>
+                  <textarea class="form-control" name="nm_jenis_bus" rows="2"></textarea>
                 </div>
                 
               </div>
@@ -95,13 +88,22 @@
 <script>
   var save_method;
   var id_edit;
-  var tb_data;
+  var id_user;
   $(function () {
     
 
     REFRESH_DATA()
     
- 
+
+
+    $("#add_data").click(function(){
+      $("#FRM_DATA")[0].reset()
+      save_method = "save"
+      $("#modal_add .modal-title").text('Add Data')
+      $("#modal_add").modal('show')
+    }) 
+
+    
 
     $("#BTN_SAVE").click(function(){
       event.preventDefault();
@@ -109,10 +111,10 @@
 
       
       if(save_method == 'save') {
-          urlPost = "<?php echo site_url('supplier/saveData') ?>";
+          urlPost = "<?php echo site_url('penjualan/saveData') ?>";
       }else{
-          urlPost = "<?php echo site_url('supplier/updateData') ?>";
-          formData+="&id_supplier="+id_edit
+          urlPost = "<?php echo site_url('penjualan/updateData') ?>";
+          formData+="&id_penjualan_tiket="+id_edit
       }
       // console.log(formData)
       ACTION(urlPost, formData)
@@ -124,10 +126,8 @@
 
   function REFRESH_DATA(){
     $('#tb_data').DataTable().destroy();
-    tb_data = $("#tb_data").DataTable({
-      "order": [[ 1, "asc" ]],
-      "orderCellsTop": true,
-      "ordering": false,
+    var tb_data = $("#tb_data").DataTable({
+      "order": [[ 0, "asc" ]],
       "autoWidth": false,
       "responsive": true,
       "pageLength": 25,
@@ -136,58 +136,25 @@
           "type": "GET"
       },
       "columns": [
-          { "data": "id_penjualan" },
-          { "data": "tgl_jual" },{ "data": "no_nota" },
-          { "data": "tgl_nota" },
-          { "data": null,
-            "render": function(data){
-              return "ID: "+data.id_pelanggan+"</br> Nama: "+data.nm_pelanggan
-            }
+          {
+              "data": null,
+              render: function (data, type, row, meta) {
+                  return meta.row + meta.settings._iDisplayStart + 1;
+              }
           },
-          { "data": "tot_penjualan" },{ "data": "status" },
-          { "data": "id_penjualan", 
-            "render" : function(data){
-              return "<a class='btn btn-xs btn-default detail_data' href='<?php echo base_url('penjualan/dtlData/"+data+"') ?>'><i class='fas fa-edit'></i> Detail</a>"
-            },
-            className: "text-center"
-          },
+          { "data": "id_penjualan_tiket" },
+          { "data": "tgl_pembelian" },{ "data": "tujuan" },{ "data": "no_pol" },{ "data": "tgl_keberangkatan" },
+          { "data": "jumlah_pembelian" },{ "data": "jenis_penjualan_tiket" },
           { "data": null, 
             "render" : function(data){
-              if(data.status == "proses")
-                return "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_penjualan+"\");'><i class='fas fa-trash'></i> Delete</button>"
-              else
-                return ""
+              return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
+                "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_penjualan_tiket+"\");'><i class='fas fa-trash'></i> Delete</button>"
             },
             className: "text-center"
           },
       ]
     })
-
-    
   }
-
-  $('#tb_data thead tr').clone(true).appendTo( '#tb_data thead' );
-  $('#tb_data thead tr:eq(1) th').each( function (i) {
-    
-      var title = $(this).text();
-      if(i==6)
-          $(this).html("<select class='column_search'>"+
-                          "<option value=''>All</option>"+
-                          "<option value='proses'>Proses</option>"+
-                          "<option value='kirim'>Kirim</option>"+
-                          "<option value='selesai'>Selesai</option>"+
-                      "</select>");
-      else
-      $(this).html('');
-  } );
-
-  $( '#tb_data thead'  ).on( 'change', ".column_search",function () {
-   
-    tb_data
-        .column( $(this).parent().index() )
-        .search( this.value )
-        .draw();
-  } );
 
   function ACTION(urlPost, formData){
       $.ajax({
@@ -219,11 +186,12 @@
   function editData(data, index){
     console.log(data)
     save_method = "edit"
-    id_edit = data.id_supplier;
+    id_edit = data.id_penjualan_tiket;
+
+
     $("#modal_add .modal-title").text('Edit Data')
-    $("[name='nm_supplier']").val(data.nm_supplier)
-    $("[name='no_tlp']").val(data.no_tlp)
-    $("[name='alamat']").val(data.alamat)
+    $("[name='id_penjualan_tiket']").val(data.id_penjualan_tiket)
+    $("[name='nm_jenis_bus']").val(data.nm_jenis_bus)
     $("#modal_add").modal('show')
   }
 
@@ -231,7 +199,7 @@
     if(!confirm('Delete this data?')) return
 
     urlPost = "<?php echo site_url('penjualan/deleteData') ?>";
-    formData = "id_penjualan="+id
+    formData = "id_penjualan_tiket="+id
     ACTION(urlPost, formData)
   }
 </script>
