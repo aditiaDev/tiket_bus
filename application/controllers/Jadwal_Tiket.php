@@ -47,12 +47,24 @@ class Jadwal_Tiket extends CI_Controller {
   	echo json_encode($data);
   }
 
+  public function getIdBus(){
+    $data['data'] = $this->db->query("SELECT id_bus, no_pol, jumlah_kursi from tb_bus WHERE id_jenis_bus = '".$this->input->post('id_jenis_bus')."'")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function getKursiBus(){
+    $data['data'] = $this->db->query("SELECT id_bus, no_pol, jumlah_kursi from tb_bus WHERE id_bus = '".$this->input->post('id_bus')."'")->result(); 
+
+  	echo json_encode($data);
+  }
+
   public function generateId(){
-    $unik = 'JB';
-    $kode = $this->db->query("SELECT MAX(id_jenis_bus) LAST_NO FROM tb_jenis_bus WHERE id_jenis_bus LIKE '".$unik."%'")->row()->LAST_NO;
+    $unik = date('Ym');
+    $kode = $this->db->query("SELECT MAX(id_tiket_bus) LAST_NO FROM tb_tiket_bus WHERE id_tiket_bus LIKE '".$unik."%'")->row()->LAST_NO;
     // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
     // dan diubah ke integer dengan (int)
-    $urutan = (int) substr($kode, 3, 6);
+    $urutan = (int) substr($kode, 6, 5);
     
     // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
     $urutan++;
@@ -62,15 +74,23 @@ class Jadwal_Tiket extends CI_Controller {
     // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
     // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
     $huruf = $unik;
-    $kode = $huruf . sprintf("%06s", $urutan);
+    $kode = $huruf . sprintf("%05s", $urutan);
     return $kode;
   }
+
+
 
   public function saveData(){
     
     
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('nm_jenis_bus', 'Jenis Bus', 'required|is_unique[tb_jenis_bus.nm_jenis_bus]');
+    $this->form_validation->set_rules('id_bus', 'Pilih Bus', 'required');
+    $this->form_validation->set_rules('lokasi_kumpul', 'Titik Kumpul', 'required');
+    $this->form_validation->set_rules('tujuan', 'tujuan', 'required');
+    $this->form_validation->set_rules('tgl_keberangkatan', 'Waktu Keberangkatan', 'required');
+    $this->form_validation->set_rules('jumlah_max', 'Maximal Penumpang', 'required');
+    $this->form_validation->set_rules('harga', 'Harga Tiket', 'required');
+
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -82,12 +102,17 @@ class Jadwal_Tiket extends CI_Controller {
     $id = $this->generateId();
     
     $data = array(
-              "id_jenis_bus" => $id,
-              "nm_jenis_bus" => $this->input->post('nm_jenis_bus'),
+              "id_tiket_bus" => $id,
+              "id_bus" => $this->input->post('id_bus'),
+              "lokasi_kumpul" => $this->input->post('lokasi_kumpul'),
+              "tujuan" => $this->input->post('tujuan'),
+              "tgl_keberangkatan" => $this->input->post('tgl_keberangkatan'),
+              "jumlah_max" => $this->input->post('jumlah_max'),
+              "harga" => $this->input->post('harga'),
             );
 
 
-    $this->db->insert('tb_jenis_bus', $data);
+    $this->db->insert('tb_tiket_bus', $data);
     $output = array("status" => "success", "message" => "Data Berhasil Disimpan, ID: ".$id);
     echo json_encode($output);
 
@@ -126,8 +151,8 @@ class Jadwal_Tiket extends CI_Controller {
 
   public function deleteData(){
 
-    $this->db->where('id_jenis_bus', $this->input->post('id_jenis_bus'));
-    $this->db->delete('tb_jenis_bus');
+    $this->db->where('id_tiket_bus', $this->input->post('id_tiket_bus'));
+    $this->db->delete('tb_tiket_bus');
 
     $output = array("status" => "success", "message" => "Data Berhasil di Hapus");
     echo json_encode($output);

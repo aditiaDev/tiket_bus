@@ -2,6 +2,14 @@
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.css'); ?>">
+<style>
+  .flatpickr-day {
+    max-width: 33px;
+    height: 33px;
+  }
+</style>
+
 <div class="content-wrapper">  
   <section class="content">
     <div class="container-fluid">
@@ -58,13 +66,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Jenis Bus</label>
-                      <select name="id_jenis_bus" class="form-control"></select>
+                      <select name="id_jenis_bus" class="form-control" onChange="ISI_NOPOL()"></select>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>No. Polisi</label>
-                      <select name="no_pol" class="form-control"></select>
+                      <select name="id_bus" class="form-control" onChange="ISI_MAX_PENUMPANG()"></select>
                     </div>
                   </div>
                 </div>
@@ -73,13 +81,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Titik Kumpul</label>
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" name="lokasi_kumpul">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Tujuan</label>
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" name="tujuan">
                     </div>
                   </div>
                 </div>
@@ -88,13 +96,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Waktu Keberangkatan</label>
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control datetime" name="tgl_keberangkatan" readonly="false">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Harga tiket</label>
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" name="harga" onkeypress="return onlyNumberKey(event)">
                     </div>
                   </div>
                 </div>
@@ -102,14 +110,8 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label>Kursi Kosong</label>
-                      <input type="text" class="form-control" readonly>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
                       <label>Maximal Penumpang</label>
-                      <input type="text" class="form-control" readonly>
+                      <input type="text" class="form-control" name="jumlah_max" readonly>
                     </div>
                   </div>
                 </div>
@@ -132,10 +134,18 @@
 
 <!-- jQuery -->
 <script src="<?php echo base_url('/assets/adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.js'); ?>"></script>	
 <script>
   var save_method;
   var id_edit;
   var id_user;
+
+  $(".datetime").flatpickr({
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: "Y-m-d H:i:S",
+  });	
+  
   $(function () {
     
 
@@ -177,10 +187,50 @@
       type: "GET",
       dataType: "JSON",
       success: function(data){
-        console.log(data)
+        // console.log(data)
+        var row = "<option></option>"
         $.map( data['data'], function( val, i ) {
-          $("[name='id_jenis_bus']").append("<option value='"+val.id_jenis_bus+"'>"+val.nm_jenis_bus+"</option>")
+          row += "<option value='"+val.id_jenis_bus+"'>"+val.nm_jenis_bus+"</option>"
+          
         });
+        $("[name='id_jenis_bus']").html(row)
+      }
+    })
+  }
+
+  function ISI_NOPOL(){
+    $.ajax({
+      url: "<?php echo site_url('Jadwal_Tiket/getIdBus') ?>",
+      type: "POST",
+      data: {
+        id_jenis_bus: $("[name='id_jenis_bus']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        console.log(data['data'])
+        var row="<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.id_bus+"'>"+val.no_pol+"</option>"
+          
+        });
+        $("[name='id_bus']").html(row)
+
+      }
+    })
+  }
+
+  function ISI_MAX_PENUMPANG(){
+    $.ajax({
+      url: "<?php echo site_url('Jadwal_Tiket/getKursiBus') ?>",
+      type: "POST",
+      data: {
+        id_bus: $("[name='id_bus']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        console.log(data['data'])
+        $("[name='jumlah_max']").val(data['data'][0]['jumlah_kursi'])
+        // 
       }
     })
   }
@@ -254,7 +304,7 @@
     $("#modal_add .modal-title").text('Edit Data')
     $("[name='id_jenis_bus']").val(data.id_jenis_bus)
     $("[name='jumlah_kursi']").val(data.jumlah_kursi)
-    $("[name='no_pol']").val(data.no_pol)
+    $("[name='id_bus']").val(data.no_pol)
     $("#modal_add").modal('show')
   }
 
