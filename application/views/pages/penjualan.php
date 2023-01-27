@@ -2,6 +2,11 @@
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.css'); ?>">
+<!-- Select2 -->
+<link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/select2/css/select2.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
+
 <div class="content-wrapper">  
   <section class="content">
     <div class="container-fluid">
@@ -53,18 +58,66 @@
             </div>
             <div class="modal-body">
               
-                <!-- <div class="row">
+                <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label>ID Jenis</label>
-                      <input type="text" class="form-control" name="id_jenis_bus" readonly>
+                      <label>Tanggal Keberangkatan Pelanggan</label>
+                      <input type="text" class="form-control date" name="tgl_keberangkatan" 
+                      onChange="ISI_TUJUAN()" >
                     </div>
                   </div>
-                </div> -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Tujuan</label>
+                      <select class="form-control select2" name="tujuan" onChange="ISI_JENISBUS()"></select>
+                    </div>
+                  </div>
+                </div>
 
-                <div class="form-group">
-                  <label>Jenis Bus</label>
-                  <textarea class="form-control" name="nm_jenis_bus" rows="2"></textarea>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Jenis Bus</label>
+                      <select class="form-control" name="id_jenis_bus" onChange="ISI_BUS()"></select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Pilih Bus</label>
+                      <select class="form-control" name="id_tiket_bus" ></select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Jumlah Tiket</label>
+                      <input type="text" class="form-control" name="jumlah_pembelian">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>ID Pelanggan</label>
+                      <select class="form-control select2" name="id_pelanggan" ></select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Nama Pelanggan</label>
+                      <input type="text" class="form-control" name="nm_pelanggan">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>No. Telpon</label>
+                      <input type="text" class="form-control" name="no_pelanggan">
+                    </div>
+                  </div>
                 </div>
                 
               </div>
@@ -85,15 +138,31 @@
 
 <!-- jQuery -->
 <script src="<?php echo base_url('/assets/adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.js'); ?>"></script>
+<!-- Select2 -->
+<script src="<?php echo base_url('/assets/adminlte/plugins/select2/js/select2.full.min.js'); ?>"></script>
 <script>
   var save_method;
   var id_edit;
   var id_user;
+
+  $(".datetime").flatpickr({
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: "Y-m-d H:i:S",
+  });
+  
+  $(".date").flatpickr({
+      dateFormat: "Y-m-d",
+  });
+
+  $('.select2').select2()
+
   $(function () {
     
 
     REFRESH_DATA()
-    
+    ISI_PELANGGAN()
 
 
     $("#add_data").click(function(){
@@ -120,7 +189,6 @@
       ACTION(urlPost, formData)
       $("#modal_add").modal('hide')
     })
-
 
   });
 
@@ -201,5 +269,86 @@
     urlPost = "<?php echo site_url('penjualan/deleteData') ?>";
     formData = "id_penjualan_tiket="+id
     ACTION(urlPost, formData)
+  }
+
+  function ISI_TUJUAN(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getTujuanBus') ?>",
+      type: "POST",
+      data: {
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var row = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.tujuan+"'>"+val.tujuan+"</option>"
+          
+        });
+        $("[name='tujuan']").html(row)
+      }
+    })
+    
+  }
+
+  function ISI_JENISBUS(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getJenisBus') ?>",
+      type: "POST",
+      data: {
+        tujuan: $("[name='tujuan']").val(),
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var row = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.id_jenis_bus+"'>"+val.nm_jenis_bus+"</option>"
+          
+        });
+        $("[name='id_jenis_bus']").html(row)
+      }
+    })
+  }
+
+  function ISI_BUS(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getBus') ?>",
+      type: "POST",
+      data: {
+        tujuan: $("[name='tujuan']").val(),
+        id_jenis_bus: $("[name='id_jenis_bus']").val(),
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var row = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.id_tiket_bus+"'>"+val.no_pol+" - "+val.waktu_berangkat+"</option>"
+          
+        });
+        $("[name='id_tiket_bus']").html(row)
+      }
+    })
+  }
+
+  function ISI_PELANGGAN(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getPelanggan') ?>",
+      type: "POST",
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var row = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.id_pelanggan+"'>"+val.id_pelanggan+" - "+val.nm_pelanggan+"</option>"
+          
+        });
+        $("[name='id_pelanggan']").html(row)
+      }
+    })
   }
 </script>

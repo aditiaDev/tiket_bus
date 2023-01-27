@@ -59,56 +59,76 @@ class Penjualan extends CI_Controller {
     $this->load->view('template/footer'); 
   }
 
-  public function getDataById(){
-    $id = $this->input->post('id_penjualan');
-    $this->db->select('a.*, b.id_barang, b.id_det_penjualan, b.jumlah, b.harga, ifnull(b.finishing,0) finishing, b.status_barang, d.nm_barang, c.nm_pelanggan, c.id_pelanggan');
-    $this->db->from('tb_penjualan a'); 
-    $this->db->join('tb_det_penjualan b', 'a.id_penjualan=b.id_penjualan');
-    $this->db->join('tb_pelanggan c', 'a.id_pelanggan=c.id_pelanggan');
-    $this->db->join('tb_barang d', 'b.id_barang=d.id_barang');
-    $this->db->where('a.id_penjualan', $id);
-    $this->db->order_by('b.id_det_penjualan','asc');         
-    $dataList = $this->db->get()->result(); 
-
-    $no = 0;
-    $data = [];
-    foreach ($dataList as $list) {
-      
-      $data[$no]['id_penjualan'] = $list->id_penjualan;
-      $data[$no]['tgl_jual'] = date('d-M-Y', strtotime($list->tgl_jual));
-      $data[$no]['no_nota'] = $list->no_nota;
-      $data[$no]['tgl_nota'] =  ($list->tgl_nota == "") ? "" : date('d-M-Y', strtotime($list->tgl_nota));
-      $data[$no]['ket_penjualan'] = $list->ket_penjualan;
-      $data[$no]['alamat_pengiriman'] = $list->alamat_pengiriman;
-      $data[$no]['status'] = $list->status;
-      $data[$no]['tot_penjualan'] = number_format($list->tot_penjualan,0,',','.');
-      
-      $data[$no]['id_det_penjualan'] = $list->id_det_penjualan;
-      $data[$no]['id_barang'] = $list->id_barang;
-      $data[$no]['nm_barang'] = $list->nm_barang;
-      $data[$no]['jumlah'] = $list->jumlah;
-      $data[$no]['harga'] = $list->harga;
-      $data[$no]['finishing'] = $list->finishing;
-      $data[$no]['status_barang'] = $list->status_barang;
-
-      $data[$no]['nm_pelanggan'] = $list->nm_pelanggan;
-      $data[$no]['id_pelanggan'] = $list->id_pelanggan;
-      $no++;
-    }
+  public function getTujuanBus(){
+    $data['data'] = $this->db->query("SELECT DISTINCT tujuan from tb_tiket_bus 
+    WHERE DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."'")->result(); 
 
   	echo json_encode($data);
   }
 
-  public function updateData(){
+  public function getJenisBus(){
+    $data['data'] = $this->db->query("
+    select * from tb_jenis_bus tjb where id_jenis_bus in(
+      select id_jenis_bus from tb_bus tb where id_bus IN(
+        select id_bus from tb_tiket_bus where upper(tujuan) = upper('".$this->input->post('tujuan')."') AND DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."'
+      )
+    )
+    ")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function getBus(){
+    $data['data'] = $this->db->query("
+      select A.id_tiket_bus, B.no_pol, DATE_FORMAT(A.tgl_keberangkatan, '%H:%i') as waktu_berangkat from tb_tiket_bus A
+      inner join tb_bus B on A.id_bus = B.id_bus 
+      inner join tb_jenis_bus C on B.id_jenis_bus = C.id_jenis_bus  
+      where DATE(A.tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."'
+      and upper(A.tujuan) = upper('".$this->input->post('tujuan')."')
+      and C.id_jenis_bus = '".$this->input->post('id_jenis_bus')."'
+      order by waktu_berangkat
+    ")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function getPelanggan(){
+    $data['data'] = $this->db->query("SELECT id_pelanggan, no_pelanggan, nm_pelanggan from tb_pelanggan ORDER BY id_pelanggan")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function generateId(){
+    $unik = "J".date('Ym');
+    $kode = $this->db->query("SELECT MAX(id_penjualan_tiket) LAST_NO FROM tb_penjualan_tiket WHERE id_penjualan_tiket LIKE '".$unik."%'")->row()->LAST_NO;
+    // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
+    // dan diubah ke integer dengan (int)
+    $urutan = (int) substr($kode, 7, 5);
+    
+    // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
+    $urutan++;
+    
+    // membentuk kode barang baru
+    // perintah sprintf("%03s", $urutan); berguna untuk membuat string menjadi 3 karakter
+    // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
+    // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
+    $huruf = $unik;
+    $kode = $huruf . sprintf("%05s", $urutan);
+    return $kode;
+  }
+
+
+
+  public function saveData(){
     
     
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('id_penjualan', 'ID Penjualan', 'required');
-    $this->form_validation->set_rules('id_barang[]', 'Barang', 'required');
-    $this->form_validation->set_rules('finishing[]', 'Biaya Finishing', 'required');
-    $this->form_validation->set_rules('status_barang[]', 'Status Barang', 'required');
-    $this->form_validation->set_rules('subtotal[]', 'Sub Total', 'required');
-    $this->form_validation->set_rules('tot_penjualan', 'Total Harga', 'required');
+    $this->form_validation->set_rules('id_tiket_bus', 'Pilih Bus', 'required');
+    $this->form_validation->set_rules('id_pelanggan', 'Pelanggan', 'required');
+    $this->form_validation->set_rules('nm_pelanggan', 'Nama Pelanggan', 'required');
+    $this->form_validation->set_rules('no_pelanggan', 'No Pelanggan', 'required');
+    $this->form_validation->set_rules('jumlah_pembelian', 'Jumlah Pembelian', 'required');
+
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -116,112 +136,69 @@ class Penjualan extends CI_Controller {
       echo json_encode($output);
       return false;
     }
+
+    $id = $this->generateId();
+
+    $TGL_BERANGKAT = $this->db->query("select tgl_keberangkatan as TGL_BERANGKAT from tb_tiket_bus 
+    where id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->row()->TGL_BERANGKAT;
     
     $data = array(
-        "no_nota" => $this->input->post('no_nota'),
-        "tgl_nota" => ($this->input->post('tgl_nota') == "") ? null : date('Y-m-d', strtotime($this->input->post('tgl_nota'))),
-        "status" => $this->input->post('status'),
-        "tot_penjualan" => str_replace(".", "", $this->input->post('tot_penjualan')),
-      );
+              "id_penjualan_tiket" => $id,
+              "id_tiket_bus" => $this->input->post('id_tiket_bus'),
+              "id_pelanggan" => $this->input->post('id_pelanggan'),
+              "nm_pelanggan" => $this->input->post('nm_pelanggan'),
+              "no_pelanggan" => $this->input->post('no_pelanggan'),
+              "tgl_pembelian" => date('Y-m-d H:i:s'),
+              "tgl_keberangkatan" => $TGL_BERANGKAT,
+              "jumlah_pembelian" => $this->input->post('jumlah_pembelian'),
+              "jenis_penjualan_tiket" => 'OFFLINE',
+            );
 
-    $this->db->where('id_penjualan', $this->input->post('id_penjualan'));
-    $this->db->update('tb_penjualan', $data);
 
-    foreach($this->input->post('id_barang') as $key => $each){
-      $dataDtl = array(
-        "status_barang" => $this->input->post('status_barang')[$key],
-        "finishing" => $this->input->post('finishing')[$key],
-      );
+    $this->db->insert('tb_penjualan_tiket', $data);
+    $output = array("status" => "success", "message" => "Data Berhasil Disimpan, ID: ".$id);
+    echo json_encode($output);
 
-      $this->db->where('id_penjualan', $this->input->post('id_penjualan'));
-      $this->db->where('id_barang', $this->input->post('id_barang')[$key]);
-      $this->db->update('tb_det_penjualan', $dataDtl);
-    }
+  }
 
-    if($this->input->post('status') == "selesai"){
-
-      // Insert table pemasukan
-      $unik = 'M'.date('dmY');
-      $kode = $this->db->query("select MAX(id_pemasukan) LAST_NO from tb_pemasukan
-                                WHERE id_pemasukan LIKE '".$unik."%'")->row()->LAST_NO;
-      
-      $urutan = (int) substr($kode, 9, 4);
-      $urutan++;
-      $huruf = $unik;
-      $kode = $huruf . sprintf("%04s", $urutan);
-
-      $tot_penjualan = $this->db->query("SELECT tot_penjualan FROM tb_penjualan 
-                                WHERE id_penjualan='".$this->input->post('id_penjualan')."'")->row()->tot_penjualan;
-      $dataPemasukan = array(
-        "id_pemasukan" => $kode,
-        "id_pelanggan" => $this->input->post('id_pelanggan'),
-        "id_relasi" => $this->input->post('id_penjualan'),
-        "tgl_input" => date("Y-m-d").' '.date("H:i:s"),
-        "tipe_pemasukan" => "penjualan",
-        "nominal_masuk" => $tot_penjualan,
-      );
-      $this->db->insert('tb_pemasukan', $dataPemasukan);
-      // Insert table pemasukan
-
-      // update table barang field stok
-
-      $jmlPenjualan = $this->db->query("SELECT id_barang, jumlah FROM tb_det_penjualan 
-                                        WHERE id_penjualan='".$this->input->post('id_penjualan')."'
-                                        AND status_barang='sudah jadi'")->result();
-      foreach ($jmlPenjualan as $list) {
-
-        $this->db->query("UPDATE tb_barang SET stok=stok-".$list->jumlah." WHERE 
-                          id_barang='".$list->id_barang."'");
-      }
-      // update table barang field stok
-
-      // Insert table jurnal keuangan
-      $unik = 'U'.date('dmY');
-      $kodeUang = $this->db->query("select MAX(id_jurnal_uang) LAST_NO from tb_jurnal_keuangan 
-                                WHERE id_jurnal_uang LIKE '".$unik."%'")->row()->LAST_NO;
-      
-      $urutan = (int) substr($kodeUang, 9, 4);
-      $urutan++;
-      $huruf = $unik;
-      $kodeUang = $huruf . sprintf("%04s", $urutan);
-
-      
-      $dataKeuangan = array(
-        "id_jurnal_uang" => $kodeUang,
-        "tgl_input" => date("Y-m-d").' '.date("H:i:s"),
-        "id_relasi" => $kode,
-        "masuk" => $tot_penjualan,
-      );
-      $this->db->insert('tb_jurnal_keuangan', $dataKeuangan);
-      // Insert table jurnal keuangan
-
-      // Insert table jurnal stok
-      $unik = 'S'.date('dmY');
-      $kodeStok = $this->db->query("select MAX(id_jurnal_stok) LAST_NO from tb_jurnal_stok 
-                                WHERE id_jurnal_stok LIKE '".$unik."%'")->row()->LAST_NO;
-      
-      $urutan = (int) substr($kodeStok, 9, 4);
-      $urutan++;
-      $huruf = $unik;
-      $kodeStok = $huruf . sprintf("%04s", $urutan);
-
-      $tot_stok_keluar = $this->db->query("SELECT SUM(jumlah) tot_stok_keluar FROM tb_det_penjualan 
-                                  WHERE id_penjualan='".$this->input->post('id_penjualan')."'")->row()->tot_stok_keluar;
-      
-      $dataStok = array(
-        "id_jurnal_stok" => $kodeStok,
-        "tgl_input" => date("Y-m-d").' '.date("H:i:s"),
-        "id_relasi" => $kode,
-        "keluar" => $tot_stok_keluar,
-      );
-      $this->db->insert('tb_jurnal_stok', $dataStok);
-      // Insert table jurnal stok
-
-    }
+  public function updateData(){
     
+    
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('id_jenis_bus', 'ID Jenis', 'required');
+    $this->form_validation->set_rules('nm_jenis_bus', 'Jenis Bus', 'required');
+
+    if($this->form_validation->run() == FALSE){
+      // echo validation_errors();
+      $output = array("status" => "error", "message" => validation_errors());
+      echo json_encode($output);
+      return false;
+    }
+
+    $data = array(
+      "nm_jenis_bus" => $this->input->post('nm_jenis_bus'),
+    );
+
+
+    $this->db->where('id_jenis_bus', $this->input->post('id_jenis_bus'));
+    $this->db->update('tb_jenis_bus', $data);
+    if($this->db->error()['message'] != ""){
+      $output = array("status" => "error", "message" => $this->db->error()['message']);
+      echo json_encode($output);
+      return false;
+    }
     $output = array("status" => "success", "message" => "Data Berhasil di Update");
     echo json_encode($output);
 
+  }
+
+  public function deleteData(){
+
+    $this->db->where('id_penjualan_tiket', $this->input->post('id_penjualan_tiket'));
+    $this->db->delete('tb_penjualan_tiket');
+
+    $output = array("status" => "success", "message" => "Data Berhasil di Hapus");
+    echo json_encode($output);
   }
 
 
