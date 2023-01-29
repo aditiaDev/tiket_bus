@@ -98,6 +98,21 @@ class Penjualan extends CI_Controller {
   	echo json_encode($data);
   }
 
+  public function getNamaPelanggan(){
+    $data['data'] = $this->db->query("
+      SELECT nm_pelanggan, no_pelanggan FROM `tb_pelanggan`
+      WHERE id_pelanggan = '".$this->input->post('id_pelanggan')."'
+    ")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function getHarga(){
+    $data['data'] = $this->db->query("SELECT harga from tb_tiket_bus WHERE id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->result(); 
+
+  	echo json_encode($data);
+  }
+
   public function generateId(){
     $unik = "J".date('Ym');
     $kode = $this->db->query("SELECT MAX(id_penjualan_tiket) LAST_NO FROM tb_penjualan_tiket WHERE id_penjualan_tiket LIKE '".$unik."%'")->row()->LAST_NO;
@@ -117,7 +132,24 @@ class Penjualan extends CI_Controller {
     return $kode;
   }
 
-
+  public function generatePembayaranId(){
+    $unik = "B".date('Ym');
+    $kode = $this->db->query("SELECT MAX(id_pembayaran) LAST_NO FROM tb_pembayaran_tiket WHERE id_pembayaran LIKE '".$unik."%'")->row()->LAST_NO;
+    // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
+    // dan diubah ke integer dengan (int)
+    $urutan = (int) substr($kode, 7, 5);
+    
+    // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
+    $urutan++;
+    
+    // membentuk kode barang baru
+    // perintah sprintf("%03s", $urutan); berguna untuk membuat string menjadi 3 karakter
+    // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
+    // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
+    $huruf = $unik;
+    $kode = $huruf . sprintf("%05s", $urutan);
+    return $kode;
+  }
 
   public function saveData(){
     
@@ -156,6 +188,21 @@ class Penjualan extends CI_Controller {
 
 
     $this->db->insert('tb_penjualan_tiket', $data);
+
+    if($this->input->post('bayar') == "true"){
+      $id_pembayaran = $this->generatePembayaranId();
+      
+      $dataBayar = array(
+                "id_pembayaran" => $id_pembayaran,
+                "id_penjualan_tiket" => $id,
+                "nominal" => $this->input->post('nominal'),
+                "bukti_pembayaran" => "CASH",
+                "status_validasi" => "TERVALIDASI",
+                "tgl_bayar" => date('Y-m-d H:i:s'),
+              );
+      $this->db->insert('tb_pembayaran_tiket', $dataBayar);
+    }
+
     $output = array("status" => "success", "message" => "Data Berhasil Disimpan, ID: ".$id);
     echo json_encode($output);
 
@@ -201,6 +248,75 @@ class Penjualan extends CI_Controller {
     echo json_encode($output);
   }
 
+  public function getTujuanBusAntarKota(){
+    $data['data'] = $this->db->query("SELECT DISTINCT tujuan from tb_tiket_bus 
+    WHERE DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."' 
+    AND tipe_tiket='ANTAR KOTA'")->result(); 
 
+  	echo json_encode($data);
+  }
+
+  public function saveDataFront(){
+    
+    
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('id_tiket_bus', 'Pilih Bus', 'required');
+
+    $this->form_validation->set_rules('nm_pelanggan', 'Nama Pelanggan', 'required');
+    $this->form_validation->set_rules('no_pelanggan', 'No Pelanggan', 'required');
+    $this->form_validation->set_rules('jumlah_pembelian', 'Jumlah Pembelian', 'required');
+
+
+    if($this->form_validation->run() == FALSE){
+      // echo validation_errors();
+      $output = array("status" => "error", "message" => validation_errors());
+      echo json_encode($output);
+      return false;
+    }
+
+    $id = $this->generateId();
+
+    $TGL_BERANGKAT = $this->db->query("select tgl_keberangkatan as TGL_BERANGKAT from tb_tiket_bus 
+    where id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->row()->TGL_BERANGKAT;
+
+    $ID_PELANGGAN = $this->db->query("SELECT id_pelanggan as ID_PELANGGAN FROM `tb_pelanggan` 
+    WHERE id_user = '".$this->session->userdata('id_user')."'")->row()->ID_PELANGGAN;
+    
+    $data = array(
+              "id_penjualan_tiket" => $id,
+              "id_tiket_bus" => $this->input->post('id_tiket_bus'),
+              "id_pelanggan" => $ID_PELANGGAN,
+              "nm_pelanggan" => $this->input->post('nm_pelanggan'),
+              "no_pelanggan" => $this->input->post('no_pelanggan'),
+              "tgl_pembelian" => date('Y-m-d H:i:s'),
+              "tgl_keberangkatan" => $TGL_BERANGKAT,
+              "jumlah_pembelian" => $this->input->post('jumlah_pembelian'),
+              "jenis_penjualan_tiket" => 'ONLINE',
+            );
+
+
+    $this->db->insert('tb_penjualan_tiket', $data);
+
+    $output = array("status" => "success", "message" => "Data Berhasil Disimpan, Nomor Ticket: ".$id);
+    echo json_encode($output);
+
+  }
+
+  public function cekTicket(){
+    $nominal = $this->db->query("SELECT (A.jumlah_pembelian * B.harga) as nominal FROM `tb_penjualan_tiket` A
+    INNER JOIN tb_tiket_bus B ON A.id_tiket_bus = B.id_tiket_bus
+    WHERE id_penjualan_tiket = '".$this->input->post('id_penjualan_tiket')."'")->result_array();
+
+    // print_r($nominal);
+    
+
+    if(count($nominal) > 0){
+      $output = array("status" => "success", "message" => $nominal[0]['nominal']);
+    }else{
+      $output = array("status" => "error", "message" => "Ticket tidak ditemukan");
+    }
+
+    echo json_encode($output);
+  }
 
 }

@@ -25,8 +25,8 @@
               <table id="tb_data" class="table table-bordered table-hover" style="font-size: 12px">
                 <thead>
                 <tr>
-                  <th style="width: 25px;">No.</th>
                   <th>ID Tiket</th>
+                  <th>Tipe Tiket</th>
                   <th>Jenis Bus</th>
                   <th>Nopol</th>
                   <th>Titik Kumpul</th>
@@ -112,6 +112,15 @@
                     <div class="form-group">
                       <label>Maximal Penumpang</label>
                       <input type="text" class="form-control" name="jumlah_max" readonly>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Tipe Tiket</label>
+                      <select name="tipe_tiket" class="form-control">
+                        <option value="ANTAR KOTA">ANTAR KOTA</option>
+                        <option value="WISATA">WISATA</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -247,13 +256,7 @@
           "type": "GET"
       },
       "columns": [
-          {
-              "data": null,
-              render: function (data, type, row, meta) {
-                  return meta.row + meta.settings._iDisplayStart + 1;
-              }
-          },
-          { "data": "id_tiket_bus" },
+          { "data": "id_tiket_bus" },{ "data": "tipe_tiket" },
           { "data": "nm_jenis_bus" },
           { "data": "no_pol" },{ "data": "lokasi_kumpul" },{ "data": "tujuan" },{ "data": "tgl_keberangkatan" },
           { "data": "jumlah_max", class : "text-right" },{ "data": "harga", class : "text-right" },

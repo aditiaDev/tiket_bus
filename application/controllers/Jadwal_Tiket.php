@@ -24,7 +24,7 @@ class Jadwal_Tiket extends CI_Controller {
   	// echo json_encode($data);
 
     $dataList = $this->db->query('SELECT C.id_tiket_bus, A.nm_jenis_bus, B.id_bus, B.no_pol, C.lokasi_kumpul, 
-    C.tujuan, C.tgl_keberangkatan, c.jumlah_max, C.harga
+    C.tujuan, C.tgl_keberangkatan, c.jumlah_max, C.harga, C.tipe_tiket
     FROM tb_jenis_bus A
     INNER JOIN tb_bus B ON A.id_jenis_bus = B.id_jenis_bus
     INNER JOIN tb_tiket_bus C ON C.id_bus = B.id_bus')->result();
@@ -41,6 +41,7 @@ class Jadwal_Tiket extends CI_Controller {
       $data['data'][$no]['jumlah_max'] = $list->jumlah_max;
       $data['data'][$no]['tgl_keberangkatan'] = date('d-M-Y H:i', strtotime($list->tgl_keberangkatan));
       $data['data'][$no]['harga'] = number_format($list->harga,0,',','.');
+      $data['data'][$no]['tipe_tiket'] = $list->tipe_tiket;
       $no++;
     }
 
@@ -90,6 +91,7 @@ class Jadwal_Tiket extends CI_Controller {
     $this->form_validation->set_rules('tgl_keberangkatan', 'Waktu Keberangkatan', 'required');
     $this->form_validation->set_rules('jumlah_max', 'Maximal Penumpang', 'required');
     $this->form_validation->set_rules('harga', 'Harga Tiket', 'required');
+    $this->form_validation->set_rules('tipe_tiket', 'Tipe Tiket', 'required');
 
 
     if($this->form_validation->run() == FALSE){
@@ -109,6 +111,7 @@ class Jadwal_Tiket extends CI_Controller {
               "tgl_keberangkatan" => $this->input->post('tgl_keberangkatan'),
               "jumlah_max" => $this->input->post('jumlah_max'),
               "harga" => $this->input->post('harga'),
+              "tipe_tiket" => $this->input->post('tipe_tiket'),
             );
 
 
@@ -121,31 +124,31 @@ class Jadwal_Tiket extends CI_Controller {
   public function updateData(){
     
     
-    $this->load->library('form_validation');
-    $this->form_validation->set_rules('id_jenis_bus', 'ID Jenis', 'required');
-    $this->form_validation->set_rules('nm_jenis_bus', 'Jenis Bus', 'required');
+    // $this->load->library('form_validation');
+    // $this->form_validation->set_rules('id_jenis_bus', 'ID Jenis', 'required');
+    // $this->form_validation->set_rules('nm_jenis_bus', 'Jenis Bus', 'required');
 
-    if($this->form_validation->run() == FALSE){
-      // echo validation_errors();
-      $output = array("status" => "error", "message" => validation_errors());
-      echo json_encode($output);
-      return false;
-    }
+    // if($this->form_validation->run() == FALSE){
+    //   // echo validation_errors();
+    //   $output = array("status" => "error", "message" => validation_errors());
+    //   echo json_encode($output);
+    //   return false;
+    // }
 
-    $data = array(
-      "nm_jenis_bus" => $this->input->post('nm_jenis_bus'),
-    );
+    // $data = array(
+    //   "nm_jenis_bus" => $this->input->post('nm_jenis_bus'),
+    // );
 
 
-    $this->db->where('id_jenis_bus', $this->input->post('id_jenis_bus'));
-    $this->db->update('tb_jenis_bus', $data);
-    if($this->db->error()['message'] != ""){
-      $output = array("status" => "error", "message" => $this->db->error()['message']);
-      echo json_encode($output);
-      return false;
-    }
-    $output = array("status" => "success", "message" => "Data Berhasil di Update");
-    echo json_encode($output);
+    // $this->db->where('id_jenis_bus', $this->input->post('id_jenis_bus'));
+    // $this->db->update('tb_jenis_bus', $data);
+    // if($this->db->error()['message'] != ""){
+    //   $output = array("status" => "error", "message" => $this->db->error()['message']);
+    //   echo json_encode($output);
+    //   return false;
+    // }
+    // $output = array("status" => "success", "message" => "Data Berhasil di Update");
+    // echo json_encode($output);
 
   }
 

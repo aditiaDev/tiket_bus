@@ -5,18 +5,22 @@ class Home extends CI_Controller {
 
   public function __construct(){
     parent::__construct();
-    // if(!$this->session->userdata('id_user'))
-    //   redirect('login', 'refresh');
+    if(!$this->session->userdata('id_user'))
+      redirect('login', 'refresh');
 
       $this->load->helper('url');
       $this->load->library('pagination');
   }
 
   public function index(){
-    if($this->session->userdata('level') == "pelanggan"){
-      $this->load->view('template_pelanggan/header');
-      $this->load->view('pages/pelanggan/home');
-      $this->load->view('template_pelanggan/footer');
+    if($this->session->userdata('level') == "PELANGGAN"){
+      $this->load->view('pelanggan/header');
+      if($this->session->userdata('level') == "PELANGGAN"){
+        $this->load->view('pelanggan/home1');
+      }else{
+        $this->load->view('pelanggan/home');
+      }
+      $this->load->view('pelanggan/footer');
     }else{
       $this->load->view('template/header');
       $this->load->view('template/sidebar');

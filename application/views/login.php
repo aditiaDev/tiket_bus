@@ -1,103 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Penjualan Tiket Bus</title>
-
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/fontawesome-free/css/all.min.css'); ?>">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css'); ?>">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/dist/css/adminlte.min.css'); ?>">
+  <meta charset="UTF-8">
+  <title>PO. Berlian Jaya</title>
+  <link rel="stylesheet" href="<?php echo base_url('/assets/login/style.css'); ?>">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/toastr/toastr.min.css'); ?>">
+  <style>
+    .hero-wrap {
+        width: 100%;
+        height: 850px;
+        position: inherit;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top center;
+    }
+  </style>
 </head>
-<body class="hold-transition login-page">
-<div class="login-box">
-  <!-- /.login-logo -->
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
-      <h3>Penjualan Tiket Bus</h3>
+<body class="hero-wrap" style="background-image: url('<?php echo base_url('/assets/front/images/') ?>bus.jpg ');">
+
+
+    <div class="main">
+      <div class="container a-container" id="a-container">
+        <form class="form" id="FRM_DATA" method="" action="">
+          <h2 class="form_title title">Sign in to Website</h2>
+          
+          <input class="form__input" type="text" name="username" placeholder="Username">
+          <input class="form__input" type="password" name="password" placeholder="Password">
+          <button class="form__button button" type="submit">SIGN IN</button>
+        </form>
+      </div>
+      <div class="container b-container" id="b-container">
+        
+
+        <form class="form" id="a-form" method="" action="">
+          <h2 class="form_title title">Create Account</h2>
+          
+          <input class="form__input" type="text" name="nm_pelanggan" placeholder="Nama">
+          <input class="form__input" type="text" name="no_pelanggan" placeholder="No. Telpone">
+          <textarea name="alamat_pelanggan" class="form__input" style="height:unset;padding-top: 10px;" rows="3" placeholder="Alamat"></textarea>
+          <input class="form__input" type="text" name="usernm" placeholder="Email">
+          <input class="form__input" type="password" name="pass" placeholder="Password">
+          <button class="form__button button" type="submit">SIGN UP</button>
+        </form>
+      </div>
+      <div class="switch" id="switch-cnt">
+        <div class="switch__circle"></div>
+        <div class="switch__circle switch__circle--t"></div>
+        <div class="switch__container" id="switch-c1">
+          <h2 class="switch__title title">Welcome Back !</h2>
+          <p class="switch__description description">To keep connected with us please login with your personal info</p>
+          <button class="switch__button button switch-btn">Daftar</button>
+        </div>
+        <div class="switch__container is-hidden" id="switch-c2">
+          <h2 class="switch__title title">Hello Friend !</h2>
+          <p class="switch__description description">Enter your personal details and start journey with us</p>
+          <button class="switch__button button switch-btn">Login</button>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
 
-      <form method="post" id="FRM_DATA">
-        <div class="input-group mb-3">
-          <input type="text" name="username" class="form-control" placeholder="Username" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-4">
-            <a href="<?php echo base_url("login/register")?>" class="btn btn-warning btn-block">Register</a>
-          </div>
-          <div class="col-4"></div>
-          <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
 
-      <p class="mb-0">
-      </p>
-    </div>
-    <!-- /.card-body -->
-  </div>
-  <!-- /.card -->
-</div>
-<!-- /.login-box -->
+<!-- partial -->
+  <script  src="<?php echo base_url('/assets/login/script.js'); ?>"></script>
+  <!-- jQuery -->
+  <script src="<?php echo base_url('/assets/adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
+  <script src="<?php echo base_url('/assets/adminlte/plugins/toastr/toastr.min.js'); ?>"></script>
+  <script>
+    $(function(){
+      $("#FRM_DATA").submit(function(event){
 
-<!-- jQuery -->
-<script src="<?php echo base_url('/assets/adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
-<!-- Bootstrap 4 -->
-<script src="<?php echo base_url('/assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo base_url('/assets/adminlte/dist/js/adminlte.min.js'); ?>"></script>
-<script src="<?php echo base_url('/assets/adminlte/plugins/toastr/toastr.min.js'); ?>"></script>
-<script>
-  $(function(){
-    $("#FRM_DATA").submit(function(event){
-
-      event.preventDefault();
-      var formData = $(this).serialize();
-      $.ajax({
-          url: "<?php echo site_url('login/login') ?>",
-          type: "POST",
-          data: formData,
-          dataType: "JSON",
-          beforeSend: function () {
-            $("#LOADER").show();
-          },
-          complete: function () {
-            $("#LOADER").hide();
-          },
-          success: function(data){
-            // console.log(data)
-            if (data.status == "success") {
-              window.location="<?php echo base_url('home');?>"
-            }else{
-              toastr.error(data.message)
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "<?php echo site_url('login/login') ?>",
+            type: "POST",
+            data: formData,
+            dataType: "JSON",
+            // beforeSend: function () {
+            //   $("#LOADER").show();
+            // },
+            // complete: function () {
+            //   $("#LOADER").hide();
+            // },
+            success: function(data){
+              // console.log(data)
+              if (data.status == "success") {
+                window.location="<?php echo base_url('home');?>"
+              }else{
+                toastr.error(data.message)
+              }
             }
-          }
+        })
       })
     })
-  })
-</script>
+  </script>
 </body>
 </html>

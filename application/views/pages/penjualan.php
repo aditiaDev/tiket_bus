@@ -84,38 +84,68 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Pilih Bus</label>
-                      <select class="form-control" name="id_tiket_bus" ></select>
+                      <select class="form-control" name="id_tiket_bus" onChange="ISI_HARGA()"></select>
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Jumlah Tiket</label>
-                      <input type="text" class="form-control" name="jumlah_pembelian">
-                    </div>
-                  </div>
-
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>ID Pelanggan</label>
-                      <select class="form-control select2" name="id_pelanggan" ></select>
+                      <select class="form-control select2" name="id_pelanggan" onChange="ISI_NM_PELANGGAN()" ></select>
                     </div>
                   </div>
-                </div>
 
-                <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Nama Pelanggan</label>
                       <input type="text" class="form-control" name="nm_pelanggan">
                     </div>
                   </div>
+                </div>
+
+                <div class="row">
+                  
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>No. Telpon</label>
                       <input type="text" class="form-control" name="no_pelanggan">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Jumlah Tiket</label>
+                      <input type="text" class="form-control" name="jumlah_pembelian" >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group clearfix">
+                      <h5 style="display: contents;">Bayar Sekarang? </h5>
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox"  id="cbbayar" checked="">
+                        <label for="cbbayar">
+                          Ya
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6" >
+                    <div class="form-group">
+                      <label>Harga Tiket</label>
+                      <input type="text" class="form-control" name="harga_tiket" readonly>
+                    </div>
+                  </div>
+                  <div class="col-sm-6"  id="frmBayar">
+                    <div class="form-group">
+                      <label>Jumlah Pembayaran</label>
+                      <input type="text" class="form-control" name="nominal" readonly>
                     </div>
                   </div>
                 </div>
@@ -172,7 +202,14 @@
       $("#modal_add").modal('show')
     }) 
 
-    
+    $("#cbbayar").change(function(){
+      if($("#cbbayar").is(":checked") == true){
+        $("#frmBayar").css("display", "")
+      }else{
+        $("#frmBayar").css("display", "none")
+      }
+      
+    })
 
     $("#BTN_SAVE").click(function(){
       event.preventDefault();
@@ -184,6 +221,10 @@
       }else{
           urlPost = "<?php echo site_url('penjualan/updateData') ?>";
           formData+="&id_penjualan_tiket="+id_edit
+      }
+
+      if($("#cbbayar").is(":checked") == true){
+        formData+="&bayar=true"
       }
       // console.log(formData)
       ACTION(urlPost, formData)
@@ -351,4 +392,41 @@
       }
     })
   }
+
+  function ISI_NM_PELANGGAN(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getNamaPelanggan') ?>",
+      type: "POST",
+      data: {
+        id_pelanggan: $("[name='id_pelanggan']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        $("[name='nm_pelanggan']").val(data['data'][0]['nm_pelanggan'])
+        $("[name='no_pelanggan']").val(data['data'][0]['no_pelanggan'])
+      }
+    })
+  }
+
+  function ISI_HARGA(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getHarga') ?>",
+      type: "POST",
+      data: {
+        id_tiket_bus: $("[name='id_tiket_bus']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data['data'])
+        $("[name='harga_tiket']").val(data['data'][0]['harga'])
+      }
+    })
+  }
+
+  $("[name='jumlah_pembelian']").change(function(){
+    var nominal = parseInt($("[name='jumlah_pembelian']").val()) * parseInt($("[name='harga_tiket']").val())
+    $("[name='nominal']").val(nominal)
+    
+  })
 </script>
