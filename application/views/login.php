@@ -33,7 +33,7 @@
       <div class="container b-container" id="b-container">
         
 
-        <form class="form" id="a-form" method="" action="">
+        <form class="form" id="FRM_REGISTER" method="" action="">
           <h2 class="form_title title">Create Account</h2>
           
           <input class="form__input" type="text" name="nm_pelanggan" placeholder="Nama">
@@ -49,12 +49,12 @@
         <div class="switch__circle switch__circle--t"></div>
         <div class="switch__container" id="switch-c1">
           <h2 class="switch__title title">Welcome Back !</h2>
-          <p class="switch__description description">To keep connected with us please login with your personal info</p>
+          <p class="switch__description description" style="color: #fff;">To keep connected with us please login with your personal info</p>
           <button class="switch__button button switch-btn">Daftar</button>
         </div>
         <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title">Hello Friend !</h2>
-          <p class="switch__description description">Enter your personal details and start journey with us</p>
+          <p class="switch__description description" style="color: #fff;">Enter your personal details and start journey with us</p>
           <button class="switch__button button switch-btn">Login</button>
         </div>
       </div>
@@ -93,6 +93,35 @@
             }
         })
       })
+
+      $("#FRM_REGISTER").submit(function(event){
+
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "<?php echo site_url('login/signUp') ?>",
+            type: "POST",
+            data: formData,
+            dataType: "JSON",
+            /*beforeSend: function () {
+              $("#LOADER").show();
+            },
+            complete: function () {
+              $("#LOADER").hide();
+            },*/
+            success: function(data){
+              console.log(data)
+              if (data.status == "success") {
+                alert('Pendaftaran Berhasil')
+                window.location="<?php echo base_url('front/login');?>"
+              }else{
+                toastr.error(data.message)
+              }
+            }
+        })
+      })
+
+
     })
   </script>
 </body>

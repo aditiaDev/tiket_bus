@@ -48,15 +48,52 @@ class Login extends CI_Controller {
     $this->load->view('register');
   }
 
+  public function generateUserId(){
+    $unik = 'U'.date('y');
+    $kode = $this->db->query("SELECT MAX(id_user) LAST_NO FROM tb_user WHERE id_user LIKE '".$unik."%'")->row()->LAST_NO;
+    // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
+    // dan diubah ke integer dengan (int)
+    $urutan = (int) substr($kode, 3, 5);
+    
+    // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
+    $urutan++;
+    
+    // membentuk kode barang baru
+    // perintah sprintf("%03s", $urutan); berguna untuk membuat string menjadi 3 karakter
+    // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
+    // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
+    $huruf = $unik;
+    $kode = $huruf . sprintf("%05s", $urutan);
+    return $kode;
+  }
+
+  public function generatePelangganId(){
+    $unik = 'P'.date('y');
+    $kode = $this->db->query("SELECT MAX(id_pelanggan) LAST_NO FROM tb_pelanggan WHERE id_pelanggan LIKE '".$unik."%'")->row()->LAST_NO;
+    // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
+    // dan diubah ke integer dengan (int)
+    $urutan = (int) substr($kode, 3, 5);
+    
+    // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
+    $urutan++;
+    
+    // membentuk kode barang baru
+    // perintah sprintf("%03s", $urutan); berguna untuk membuat string menjadi 3 karakter
+    // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
+    // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
+    $huruf = $unik;
+    $kode = $huruf . sprintf("%05s", $urutan);
+    return $kode;
+  }
+
   public function signUp(){
     $this->load->library('form_validation');
     $this->form_validation->set_rules('nm_pelanggan', 'Nama', 'required');
-    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
-    $this->form_validation->set_rules('no_tlp', 'No Telphone', 'required|numeric');
-    $this->form_validation->set_rules('no_tlp', 'No Telphone', 'required|numeric');
+    $this->form_validation->set_rules('alamat_pelanggan', 'Alamat', 'required');
+    $this->form_validation->set_rules('no_pelanggan', 'No Telphone', 'required|numeric');
 
     $this->form_validation->set_rules('username', 'Username', 'required|is_unique[tb_user.username]');
-    $this->form_validation->set_rules('username_telegram', 'username Telegram', 'required');
+    $this->form_validation->set_rules('password', 'Password', 'required');
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -65,27 +102,28 @@ class Login extends CI_Controller {
       return false;
     }
 
+    $id_user = $this->generateUserId();
+
     $dataUser = array(
+              "id_user" => $id_user,
               "username" => $this->input->post('username'),
               "password" => $this->input->post('password'),
-              "level" => "pelanggan",
+              "nm_pengguna" => $this->input->post('nm_pelanggan'),
+              "level" => "PELANGGAN",
             );
     $this->db->insert('tb_user', $dataUser);
 
-    $id_user = $this->db->query("SELECT id_user FROM tb_user 
-                                WHERE username='".$this->input->post('username')."' 
-                                AND `password`='".$this->input->post('password')."' 
-                                LIMIT 1")->row()->id_user;
+    $id_pelanggan = $this->generatePelangganId();
 
-    
     $data = array(
-              "nm_pelanggan" => $this->input->post('nm_pelanggan'),
-              "no_tlp" => $this->input->post('no_tlp'),
-              "alamat" => $this->input->post('alamat'),
-              "username_telegram" => $this->input->post('username_telegram'),
+              "id_pelanggan" => $id_pelanggan,
               "id_user" => $id_user,
+              "nm_pelanggan" => $this->input->post('nm_pelanggan'),
+              "no_pelanggan" => $this->input->post('no_pelanggan'),
+              "alamat_pelanggan" => $this->input->post('alamat_pelanggan'),
             );
     $this->db->insert('tb_pelanggan', $data);
+
     $output = array("status" => "success", "message" => "Data Berhasil Disimpan");
     echo json_encode($output);
   }

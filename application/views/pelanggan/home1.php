@@ -47,11 +47,19 @@
                 ?>
 
                 <div class="d-md-flex">
-                  <div class="form-group col-12 col-md-6">
+                  <div class="form-group col-12 col-md-4">
+                    <label for="" class="label">Jenis Tiket</label>
+                    <select name="jenis_tiket" class="form-control">
+                      <option></option>
+                      <option value="ANTAR KOTA">ANTAR KOTA</option>
+                      <option value="WISATA">WISATA</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-12 col-md-4">
                     <label for="" class="label">Nama Pelanggan</label>
                     <input type="text" class="form-control" name="nm_pelanggan" value="<?php echo $nm_pelanggan ?>" >
                   </div>
-                  <div class="form-group col-12 col-md-6">
+                  <div class="form-group col-12 col-md-4">
                     <label for="" class="label">No. Telphone</label>
                     <input type="text" class="form-control" name="no_pelanggan" value="<?php echo $no_pelanggan ?>">
                   </div>
@@ -151,7 +159,7 @@
                 <div class="d-md-flex mt-2">
                   <div class="form-group col-12 col-md-12">
                     <label for="" class="label">Masukkan Nomor Tiket Anda</label>
-                    <input type="text" class="form-control" name="id_tiket" placeholder="Masukkan Nomor Tiket Anda">
+                    <input type="text" class="form-control" name="id_tiket" onChange="CEK_PEMBAYARAN()" placeholder="Masukkan Nomor Tiket Anda">
                   </div>
                 </div>
                 <div class="d-md-flex">
@@ -360,7 +368,8 @@
       url: "<?php echo site_url('penjualan/getTujuanBusAntarKota') ?>",
       type: "POST",
       data: {
-        tgl_berangkat: $("[name='tgl_keberangkatan']").val()
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val(),
+        jenis_tiket: $("[name='jenis_tiket']").val()
       },
       dataType: "JSON",
       success: function(data){
@@ -515,6 +524,29 @@
         }else{
           toastr.error(data.message)
           $("#btnUpload").attr('disabled',true)
+        }
+        
+      }
+    })
+  }
+
+  function CEK_PEMBAYARAN(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/cekPembayaran') ?>",
+      type: "POST",
+      data: {
+        id_tiket: $("[name='id_tiket']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data.status)
+        
+        if(data['status'] == "success"){
+          $("#jmlBayar").val(data['message'])
+          $("#btnCetak").attr('disabled',false)
+        }else{
+          toastr.error(data.message)
+          $("#btnCetak").attr('disabled',true)
         }
         
       }

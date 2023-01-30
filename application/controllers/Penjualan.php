@@ -251,7 +251,7 @@ class Penjualan extends CI_Controller {
   public function getTujuanBusAntarKota(){
     $data['data'] = $this->db->query("SELECT DISTINCT tujuan from tb_tiket_bus 
     WHERE DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."' 
-    AND tipe_tiket='ANTAR KOTA'")->result(); 
+    AND tipe_tiket='".$this->input->post('jenis_tiket')."'")->result(); 
 
   	echo json_encode($data);
   }
@@ -314,6 +314,27 @@ class Penjualan extends CI_Controller {
       $output = array("status" => "success", "message" => $nominal[0]['nominal']);
     }else{
       $output = array("status" => "error", "message" => "Ticket tidak ditemukan");
+    }
+
+    echo json_encode($output);
+  }
+
+  public function cekPembayaran(){
+    $data = $this->db->query("SELECT status_validasi from tb_pembayaran_tiket
+    WHERE id_penjualan_tiket = '".$this->input->post('id_tiket')."'")->result_array();
+
+    // print_r($nominal);
+    
+
+    if(count($data) > 0){
+      if($data[0]['status_validasi'] == "TERUPLOAD"){
+        $output = array("status" => "error", "message" => "Pembayaran Anda belum terverifikasi, silahkan hubungi Admin kami");
+      }else{
+        $output = array("status" => "success", "message" => "Data Oke");
+      }
+      
+    }else{
+      $output = array("status" => "error", "message" => "Anda belum mengunggah Bukti Pembayaran");
     }
 
     echo json_encode($output);
