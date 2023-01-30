@@ -13,10 +13,7 @@
               <i class="fas fa-ticket-alt"></i>
               <span style="font-size:14px;">Reservasi Tiket Antar kota</span>
             </a>
-            <a class="list-group-item" id="list-ticket-wisata" data-toggle="list" href="#list-wisata" role="tab" aria-controls="wisata_ticket" aria-selected="false">
-              <i class="fas fa-ticket-alt"></i>
-              <span style="font-size:14px;">Reservasi Tiket Wisata</span>
-            </a>
+            
             <a class="list-group-item" id="list-upload-ticket" data-toggle="list" href="#list-upload" role="tab" aria-controls="upload_ticket" aria-selected="true">
               <i class="fas fa-receipt"></i>
               <span style="font-size:14px;">Upload Bukti Pembayaran</span>
@@ -164,7 +161,7 @@
                 </div>
                 <div class="d-md-flex">
                   <div class="form-group col-12 col-md-12" style="text-align: right;">
-                    <button type="submit" id="btnCetak" class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cetak Tiket</button>
+                    <button type="submit" id="btnCetak" disabled class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cetak Tiket</button>
                   </div>
                 </div>
               </form>
@@ -495,7 +492,6 @@
         console.log(data)
         if (data.status == "success") {
           toastr.info(data.message)
-          REFRESH_DATA()
 
         }else{
           toastr.error(data.message)

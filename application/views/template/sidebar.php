@@ -85,6 +85,15 @@
           </li>
 
           <li class="nav-item">
+            <a href="<?php echo base_url("kepuasan/")?>" class="nav-link">
+              <i class="nav-icon fas fa-receipt"></i>
+              <p>
+                Kepuasan Pelanggan
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-print"></i>
               <p>
@@ -94,19 +103,19 @@
             </a>
             <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo base_url("laporan/pelanggan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PELANGGAN"){echo 'active';}?>">
+              <a href="<?php echo base_url("report/pelanggan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PELANGGAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Pelanggan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?php echo base_url("laporan/penjualan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
+                <a href="<?php echo base_url("report/penjualan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Pemesanan Tiket</p>
                 </a>
               </li>
               <li class="nav-item">
-              <a href="<?php echo base_url("laporan/kepuasan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="KEPUASAN"){echo 'active';}?>">
+              <a href="<?php echo base_url("report/kepuasan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="KEPUASAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Kepuasan Pelanggan</p>
                 </a>

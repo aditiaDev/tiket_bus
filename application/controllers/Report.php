@@ -9,6 +9,12 @@ class Report extends CI_Controller {
     //   redirect('login', 'refresh');
   }
 
+  public function kepuasan(){
+    $this->load->view('template/header');
+    $this->load->view('template/sidebar');
+    $this->load->view('pages/kepuasan');
+    $this->load->view('template/footer');
+  }
 
   public function cetakTiket(){
     $this->load->library('ciqrcode');
@@ -50,4 +56,6 @@ class Report extends CI_Controller {
     $mpdf->WriteHTML($html);
     $mpdf->Output();
   }
+
+
 }

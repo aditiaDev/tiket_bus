@@ -77,12 +77,7 @@
             type: "POST",
             data: formData,
             dataType: "JSON",
-            // beforeSend: function () {
-            //   $("#LOADER").show();
-            // },
-            // complete: function () {
-            //   $("#LOADER").hide();
-            // },
+
             success: function(data){
               // console.log(data)
               if (data.status == "success") {
@@ -103,12 +98,6 @@
             type: "POST",
             data: formData,
             dataType: "JSON",
-            /*beforeSend: function () {
-              $("#LOADER").show();
-            },
-            complete: function () {
-              $("#LOADER").hide();
-            },*/
             success: function(data){
               console.log(data)
               if (data.status == "success") {

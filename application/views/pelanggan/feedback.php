@@ -128,7 +128,8 @@
           // },
           success: function(data){
             // console.log(data)
-            alert(data)
+            alert(data.message)
+            window.location="<?php echo base_url('front/');?>"
             // if (data.status == "success") {
             //   // toastr.info(data.message)
               
