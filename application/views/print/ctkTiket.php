@@ -14,7 +14,10 @@
 
 				<?php foreach($data as $row): ?>
 				<tr>
-					<td colspan="3" style="text-align:center;"><img style="width: 100px;" src="<?php echo base_url('assets/images/qrcode/').$row['qrcode'];?>"></td>
+					<td colspan="3" style="text-align:center;">
+            <!-- <img style="width: 100px;" src="<?php echo base_url('assets/images/qrcode/').$row['qrcode'];?>"> -->
+            <barcode code="<?php echo $row['id_penjualan_tiket']; ?>" type="C39" size="0.5" height="2.0" />
+          </td>
 				</tr>
         <tr>
           <td>Nomor Ticket</td>

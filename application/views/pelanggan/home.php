@@ -10,11 +10,11 @@
               <div class="d-flex flex-md-column list-group" id="list-tab" role="tablist">
                 <a class="list-group-item active" id="list-ticket-list" data-toggle="list" href="#list-ticket" role="tab" aria-controls="ticket" aria-selected="false">
                   <i class="fas fa-ticket-alt"></i>
-                  <span style="font-size:14px;">Reservasi Tiket Antar kota</span>
+                  <span style="font-size:14px;">Cek Jadwal Antar kota</span>
                 </a>
                 <a class="list-group-item" id="list-ticket-wisata" data-toggle="list" href="#list-ticket-wisata" role="tab" aria-controls="ticket" aria-selected="false">
                   <i class="fas fa-ticket-alt"></i>
-                  <span style="font-size:14px;">Reservasi Tiket Wisata</span>
+                  <span style="font-size:14px;">Cek Jadwal Tiket Wisata</span>
                 </a>
                 <a class="list-group-item" id="list-cektiket-list" data-toggle="list" href="#list-cektiket" role="tab" aria-controls="cektiket" aria-selected="true">
                   <i class="fas fa-receipt"></i>

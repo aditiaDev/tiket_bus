@@ -95,7 +95,12 @@ class Kepuasan extends CI_Controller {
       }
 
       $nilai_max = $tot_frekuensi * 5;
-      $sevqual = ($total_persepsi / $nilai_max) * 100;
+      if($nilai_max == 0){
+        $sevqual = 0;
+      }else{
+        $sevqual = ($total_persepsi / $nilai_max) * 100;
+      }
+      
       $tot_sevqual = $tot_sevqual + $sevqual;
 
       $html .= "<table border='1'>

@@ -16,6 +16,20 @@ class Report extends CI_Controller {
     $this->load->view('template/footer');
   }
 
+  public function pelanggan(){
+    $this->load->view('template/header');
+    $this->load->view('template/sidebar');
+    $this->load->view('pages/report_pelanggan');
+    $this->load->view('template/footer');
+  }
+
+  public function pemesanan(){
+    $this->load->view('template/header');
+    $this->load->view('template/sidebar');
+    $this->load->view('pages/report_pemesanan');
+    $this->load->view('template/footer');
+  }
+
   public function cetakTiket(){
     $this->load->library('ciqrcode');
 
@@ -57,5 +71,35 @@ class Report extends CI_Controller {
     $mpdf->Output();
   }
 
+  public function ctkPelanggan(){
+    $data['data'] = $this->db->query("SELECT * FROM tb_pelanggan ORDER BY nm_pelanggan")->result_array();
+
+    $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L', 'margin_left' => '5', 'margin_right' => '5']);
+    $mpdf->setFooter('{PAGENO}');
+    $html = $this->load->view('print/ctkPelanggan',$data, true);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output();
+  }
+
+  public function ctkPemesanan(){
+    $data['data'] = $this->db->query("
+      select A.id_penjualan_tiket, A.id_tiket_bus, B.tujuan, B.tgl_keberangkatan,  
+      C.nm_pelanggan, A.tgl_pembelian, B.harga, A.jumlah_pembelian, (B.harga * A.jumlah_pembelian) nominal,
+      A.jenis_penjualan_tiket 
+      from tb_penjualan_tiket A
+      inner join tb_tiket_bus B on A.id_tiket_bus = B.id_tiket_bus 
+      inner join tb_pelanggan C on A.id_pelanggan = C.id_pelanggan
+      WHERE
+      a.tgl_pembelian  >= '".$this->input->post('start_date')."'
+      AND a.tgl_pembelian  <= DATE(DATE_ADD('".$this->input->post('end_date')."', INTERVAL 1 DAY))
+      order by A.tgl_keberangkatan, A.tgl_pembelian
+    ")->result_array();
+
+    $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L', 'margin_left' => '5', 'margin_right' => '5']);
+    $mpdf->setFooter('{PAGENO}');
+    $html = $this->load->view('print/ctkPemesanan',$data, true);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output();
+  }
 
 }

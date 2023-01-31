@@ -56,6 +56,12 @@
                   <p>Pelanggan</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url("user/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="USER"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>User</p>
+                </a>
+              </li>
             </ul>
           </li>
           
@@ -109,7 +115,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?php echo base_url("report/penjualan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
+                <a href="<?php echo base_url("report/pemesanan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMESANAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Pemesanan Tiket</p>
                 </a>

@@ -59,9 +59,9 @@
               <div class="form-group">
                 <p>Level Akses</p>
                 <select class="form-control" name="level">
-                  <option value="admin">Admin</option>
-                  <option value="pemilik">Pemilik</option>
-                  <option value="pelanggan">Pelanggan</option>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="DIREKTUR">DIREKTUR</option>
+                  <option value="SEKERTARIS">SEKERTARIS</option>
                 </select>
               </div>
             </div>
