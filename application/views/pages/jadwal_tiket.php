@@ -174,7 +174,6 @@
     $("#BTN_SAVE").click(function(){
       event.preventDefault();
       var formData = $("#FRM_DATA").serialize();
-
       
       if(save_method == 'save') {
           urlPost = "<?php echo site_url('jadwal_tiket/saveData') ?>";
@@ -287,8 +286,6 @@
             // console.log(data)
             if (data.status == "success") {
               toastr.info(data.message)
-              
-
               REFRESH_DATA()
 
             }else{
@@ -301,13 +298,22 @@
   function editData(data, index){
     console.log(data)
     save_method = "edit"
-    id_edit = data.id_bus;
+    id_edit = data.id_tiket_bus;
 
 
     $("#modal_add .modal-title").text('Edit Data')
-    $("[name='id_jenis_bus']").val(data.id_jenis_bus)
+    $("[name='id_jenis_bus']").val(data.id_jenis_bus).change()
+    // $("[name='id_bus']").val(data.id_bus).change()
+    setTimeout(function() {
+      $("[name='id_bus']").val(data.id_bus).change()
+    }, 1000);
     $("[name='jumlah_kursi']").val(data.jumlah_kursi)
-    $("[name='id_bus']").val(data.no_pol)
+    $("[name='lokasi_kumpul']").val(data.lokasi_kumpul)
+    $("[name='tujuan']").val(data.tujuan)
+    $("[name='tgl_keberangkatan']").val(data.tgl_keberangkatan)
+    $("[name='harga']").val(data.harga)
+    $("[name='tipe_tiket']").val(data.tipe_tiket)
+    
     $("#modal_add").modal('show')
   }
 

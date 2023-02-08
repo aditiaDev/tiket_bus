@@ -18,6 +18,8 @@
                 <thead>
                 <tr>
                   <th>No.</th>
+                  <th>ID User</th>
+                  <th>Nama Pengguna</th>
                   <th>Username</th>
                   <th>Password</th>
                   <th>Level</th>
@@ -49,6 +51,10 @@
             </div>
             <div class="modal-body">
               <div class="form-group">
+                <p>Nama Pengguna</p>
+                <input type="text" class="form-control" name="nm_pengguna" placeholder="Nama Pengguna">
+              </div>
+              <div class="form-group">
                 <p>Username</p>
                 <input type="text" class="form-control" name="username" placeholder="Enter Username">
               </div>
@@ -62,6 +68,7 @@
                   <option value="ADMIN">ADMIN</option>
                   <option value="DIREKTUR">DIREKTUR</option>
                   <option value="SEKERTARIS">SEKERTARIS</option>
+                  <option value="PELANGGAN">PELANGGAN</option>
                 </select>
               </div>
             </div>
@@ -176,8 +183,8 @@
               render: function (data, type, row, meta) {
                   return meta.row + meta.settings._iDisplayStart + 1;
               }
-          },
-          { "data": "username" },{ "data": "password" },{ "data": "level" },
+          },{ "data": "id_user" },
+          { "data": "nm_pengguna" },{ "data": "username" },{ "data": "password" },{ "data": "level" },
           { "data": null, 
             "render" : function(data, type, full, meta){
               // console.log(meta.row)
@@ -195,6 +202,7 @@
     save_method = "edit"
     id_user = data.id_user;
     $("#modal_add .modal-title").text('Edit Data')
+    $("[name='nm_pengguna']").val(data.nm_pengguna)
     $("[name='username']").val(data.username)
     $("[name='password']").val(data.password)
     $("[name='level']").val(data.level)

@@ -11,17 +11,17 @@
           <div class="d-flex flex-md-column list-group" id="list-tab" role="tablist">
             <a class="list-group-item active" id="list-ticket-list" data-toggle="list" href="#list-ticket" role="tab" aria-controls="ticket" aria-selected="false">
               <i class="fas fa-ticket-alt"></i>
-              <span style="font-size:14px;">Reservasi Tiket Antar kota</span>
+              <span style="font-size:14px;">Reservasi Tiket</span>
             </a>
             
             <a class="list-group-item" id="list-upload-ticket" data-toggle="list" href="#list-upload" role="tab" aria-controls="upload_ticket" aria-selected="true">
               <i class="fas fa-receipt"></i>
               <span style="font-size:14px;">Upload Bukti Pembayaran</span>
             </a>
-            <a class="list-group-item" id="list-cektiket-list" data-toggle="list" href="#list-cektiket" role="tab" aria-controls="cektiket" aria-selected="true">
+            <!-- <a class="list-group-item" id="list-cektiket-list" data-toggle="list" href="#list-cektiket" role="tab" aria-controls="cektiket" aria-selected="true">
               <i class="fas fa-receipt"></i>
               <span style="font-size:14px;">Cek Tiket</span>
-            </a>
+            </a> -->
 
             <a class="list-group-item" id="list-cetaktiket-list" data-toggle="list" href="#list-cetaktiket" role="tab" aria-controls="cetaktiket" aria-selected="true">
               <i class="fas fa-print"></i>

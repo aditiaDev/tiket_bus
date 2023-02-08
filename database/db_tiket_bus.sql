@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 27, 2023 at 09:16 AM
+-- Generation Time: Feb 08, 2023 at 09:38 AM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.3.19
 
@@ -51,7 +51,7 @@ INSERT INTO `tb_bus` (`id_bus`, `id_jenis_bus`, `no_pol`, `jumlah_kursi`) VALUES
 
 CREATE TABLE `tb_indikator_kepuasan` (
   `id_indikator_kepuasan` varchar(25) NOT NULL,
-  `indikator_kepuasan` varchar(15) DEFAULT NULL,
+  `indikator_kepuasan` varchar(25) DEFAULT '',
   `nilai` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -60,8 +60,11 @@ CREATE TABLE `tb_indikator_kepuasan` (
 --
 
 INSERT INTO `tb_indikator_kepuasan` (`id_indikator_kepuasan`, `indikator_kepuasan`, `nilai`) VALUES
-('IK000001', 'PUAS', 5),
-('IK000002', 'TIDAK PUAS', 1);
+('IK000001', 'SANGAT TIDAK PUAS', 1),
+('IK000002', 'TIDAK PUAS', 2),
+('IK000003', 'Cukup Puas', 3),
+('IK000004', 'PUAS', 4),
+('IK000005', 'SANGAT PUAS', 5);
 
 -- --------------------------------------------------------
 
@@ -71,10 +74,52 @@ INSERT INTO `tb_indikator_kepuasan` (`id_indikator_kepuasan`, `indikator_kepuasa
 
 CREATE TABLE `tb_item_penilaian` (
   `id_item_penilaian` varchar(25) NOT NULL,
-  `id_penilaian` varchar(25) DEFAULT NULL,
+  `id_penjualan_tiket` varchar(25) DEFAULT NULL,
   `id_parameter` varchar(25) DEFAULT NULL,
   `id_indikator` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_item_penilaian`
+--
+
+INSERT INTO `tb_item_penilaian` (`id_item_penilaian`, `id_penjualan_tiket`, `id_parameter`, `id_indikator`) VALUES
+('20230100001', 'J20230100002', 'PM000001', 'IK000005'),
+('20230100002', 'J20230100002', 'PM000002', 'IK000004'),
+('20230100003', 'J20230100002', 'PM000003', 'IK000004'),
+('20230100004', 'J20230100001', 'PM000001', 'IK000004'),
+('20230100005', 'J20230100001', 'PM000002', 'IK000003'),
+('20230100006', 'J20230100001', 'PM000003', 'IK000003'),
+('20230100007', 'J20230100003', 'PM000001', 'IK000002'),
+('20230100008', 'J20230100003', 'PM000002', 'IK000002'),
+('20230100009', 'J20230100003', 'PM000003', 'IK000003'),
+('20230100010', 'J20230100004', 'PM000001', 'IK000004'),
+('20230100011', 'J20230100004', 'PM000002', 'IK000004'),
+('20230100012', 'J20230100004', 'PM000003', 'IK000004'),
+('20230100013', 'J20230100005', 'PM000001', 'IK000005'),
+('20230100014', 'J20230100005', 'PM000002', 'IK000004'),
+('20230100015', 'J20230100005', 'PM000003', 'IK000005'),
+('20230100016', 'J20230100006', 'PM000001', 'IK000003'),
+('20230100017', 'J20230100006', 'PM000002', 'IK000003'),
+('20230100018', 'J20230100006', 'PM000003', 'IK000003'),
+('20230100019', 'J20230100007', 'PM000001', 'IK000004'),
+('20230100020', 'J20230100007', 'PM000002', 'IK000005'),
+('20230100021', 'J20230100007', 'PM000003', 'IK000004'),
+('20230100022', 'J20230100008', 'PM000001', 'IK000005'),
+('20230100023', 'J20230100008', 'PM000002', 'IK000005'),
+('20230100024', 'J20230100008', 'PM000003', 'IK000005'),
+('20230100025', 'J20230100009', 'PM000001', 'IK000004'),
+('20230100026', 'J20230100009', 'PM000002', 'IK000004'),
+('20230100027', 'J20230100009', 'PM000003', 'IK000004'),
+('20230100028', 'J20230100010', 'PM000001', 'IK000002'),
+('20230100029', 'J20230100010', 'PM000002', 'IK000001'),
+('20230100030', 'J20230100010', 'PM000003', 'IK000001'),
+('20230100031', 'J20230100011', 'PM000001', 'IK000004'),
+('20230100032', 'J20230100011', 'PM000002', 'IK000004'),
+('20230100033', 'J20230100011', 'PM000003', 'IK000004'),
+('20230100034', 'J20230100012', 'PM000001', 'IK000005'),
+('20230100035', 'J20230100012', 'PM000002', 'IK000005'),
+('20230100036', 'J20230100012', 'PM000003', 'IK000005');
 
 -- --------------------------------------------------------
 
@@ -114,7 +159,9 @@ CREATE TABLE `tb_parameter` (
 --
 
 INSERT INTO `tb_parameter` (`id_parameter`, `parameter`) VALUES
-('PM000001', 'Apakah anda puas dengan pelayanan kami ?');
+('PM000001', 'Apakah anda puas dengan pelayanan pemberian informasi kami ?'),
+('PM000002', 'Apakah anda puas dengan proses transaksi pemesanan tiket pada website kami ?'),
+('PM000003', 'Apakah anda puas dengan pelayanan perjalanan dari kami?');
 
 -- --------------------------------------------------------
 
@@ -136,8 +183,9 @@ CREATE TABLE `tb_pelanggan` (
 
 INSERT INTO `tb_pelanggan` (`id_pelanggan`, `id_user`, `nm_pelanggan`, `no_pelanggan`, `alamat_pelanggan`) VALUES
 ('P2300000', 'U2300000', 'GUEST/Non Member', '', 'GUEST'),
-('P2300001', 'U2300001', 'PELANGGAN 1', '08134558891', 'BAE KUDUS'),
-('P2300002', 'U2300002', 'Test Nama', '089676726', 'Test Alamat');
+('P2300001', 'U2300001', 'Lastri', '08134558891', 'BAE KUDUS'),
+('P2300002', 'U2300002', 'Paijo', '089676726', 'Test Alamat'),
+('P2300003', 'U2300005', 'Akuu', '08134558891', 'Kudus');
 
 -- --------------------------------------------------------
 
@@ -150,8 +198,27 @@ CREATE TABLE `tb_pembayaran_tiket` (
   `id_penjualan_tiket` varchar(25) DEFAULT NULL,
   `nominal` int(11) DEFAULT NULL,
   `bukti_pembayaran` text DEFAULT NULL,
-  `status_validasi` enum('TERUPLOAD','TERVALIDASI') DEFAULT NULL
+  `status_validasi` enum('TERUPLOAD','TERVALIDASI') DEFAULT NULL,
+  `tgl_bayar` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_pembayaran_tiket`
+--
+
+INSERT INTO `tb_pembayaran_tiket` (`id_pembayaran`, `id_penjualan_tiket`, `nominal`, `bukti_pembayaran`, `status_validasi`, `tgl_bayar`) VALUES
+('B20230100001', 'J20230100003', 120000, 'CASH', 'TERVALIDASI', '2023-01-28 21:11:22'),
+('B20230100002', 'J20230100002', 120000, '1675033880091.jpg', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100003', 'J20230100001', 120000, '1675033880091.jpg', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100004', 'J20230100004', 120000, '1675033880091.jpg', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100005', 'J20230100005', 120000, '1675033880091.jpg', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100006', 'J20230100006', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100007', 'J20230100007', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100008', 'J20230100008', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100009', 'J20230100009', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100010', 'J20230100010', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100011', 'J20230100011', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20'),
+('B20230100012', 'J20230100012', 120000, 'CASH', 'TERVALIDASI', '2023-01-30 06:11:20');
 
 -- --------------------------------------------------------
 
@@ -161,11 +228,17 @@ CREATE TABLE `tb_pembayaran_tiket` (
 
 CREATE TABLE `tb_penilaian_kepuasan` (
   `id_penilaian` varchar(25) NOT NULL,
-  `id_pelanggan` varchar(25) DEFAULT NULL,
-  `id_penjualan_tiket` varchar(25) DEFAULT NULL,
+  `id_tiket_bus` varchar(25) DEFAULT NULL,
   `nilai_kepuasan` int(11) DEFAULT NULL,
   `saran` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_penilaian_kepuasan`
+--
+
+INSERT INTO `tb_penilaian_kepuasan` (`id_penilaian`, `id_tiket_bus`, `nilai_kepuasan`, `saran`) VALUES
+('N20230100001', '20230100002', 75, NULL);
 
 -- --------------------------------------------------------
 
@@ -182,16 +255,58 @@ CREATE TABLE `tb_penjualan_tiket` (
   `tgl_pembelian` datetime DEFAULT NULL,
   `tgl_keberangkatan` datetime DEFAULT NULL,
   `jumlah_pembelian` int(11) DEFAULT NULL,
-  `jenis_penjualan_tiket` enum('OFFLINE','ONLINE') DEFAULT NULL
+  `jenis_penjualan_tiket` enum('OFFLINE','ONLINE') DEFAULT NULL,
+  `status_tiket` enum('','BELUM SCAN','SUDAH SCAN') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tb_penjualan_tiket`
 --
 
-INSERT INTO `tb_penjualan_tiket` (`id_penjualan_tiket`, `id_tiket_bus`, `id_pelanggan`, `nm_pelanggan`, `no_pelanggan`, `tgl_pembelian`, `tgl_keberangkatan`, `jumlah_pembelian`, `jenis_penjualan_tiket`) VALUES
-('J20230100001', '20230100001', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-15 09:19:03', '2023-01-18 14:18:55', 1, 'OFFLINE'),
-('J20230100002', '20230100003', 'P2300000', 'SAYA', '085642231557', '2023-01-27 13:57:14', '2023-01-20 09:00:00', 2, 'OFFLINE');
+INSERT INTO `tb_penjualan_tiket` (`id_penjualan_tiket`, `id_tiket_bus`, `id_pelanggan`, `nm_pelanggan`, `no_pelanggan`, `tgl_pembelian`, `tgl_keberangkatan`, `jumlah_pembelian`, `jenis_penjualan_tiket`, `status_tiket`) VALUES
+('J20230100001', '20230100001', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-15 09:19:03', '2023-01-18 14:18:55', 1, 'OFFLINE', 'BELUM SCAN'),
+('J20230100002', '20230100003', 'P2300000', 'SAYA', '085642231557', '2023-01-27 13:57:14', '2023-01-20 09:00:00', 2, 'OFFLINE', 'SUDAH SCAN'),
+('J20230100003', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-28 20:53:51', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN'),
+('J20230100004', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-30 05:23:32', '2023-01-20 04:18:55', 3, 'ONLINE', 'BELUM SCAN'),
+('J20230100005', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'ONLINE', 'BELUM SCAN'),
+('J20230100006', '20230100002', 'P2300000', 'Painem', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN'),
+('J20230100007', '20230100002', 'P2300000', 'Paijo', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 3, 'OFFLINE', 'BELUM SCAN'),
+('J20230100008', '20230100002', 'P2300000', 'Paijah', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN'),
+('J20230100009', '20230100002', 'P2300000', 'Michel', '08134558892', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN'),
+('J20230100010', '20230100002', 'P2300000', 'Cah Bagoes', '08134558893', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN'),
+('J20230100011', '20230100002', 'P2300000', 'Agus', '08134558894', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN'),
+('J20230100012', '20230100002', 'P2300000', 'Siti', '08134558895', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 3, 'OFFLINE', 'BELUM SCAN'),
+('J20230100013', '20230100002', 'P2300000', 'Patrix', '08134558896', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_saran`
+--
+
+CREATE TABLE `tb_saran` (
+  `id_saran` int(11) NOT NULL,
+  `id_penjualan_tiket` varchar(25) NOT NULL,
+  `saran` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_saran`
+--
+
+INSERT INTO `tb_saran` (`id_saran`, `id_penjualan_tiket`, `saran`) VALUES
+(6, 'J20230100002', 'Selalu tingkatkan kualitas pelayanan'),
+(7, 'J20230100001', 'bagus'),
+(8, 'J20230100003', 'Tolong ditingkatkan lagi kualitas pelayanannya'),
+(9, 'J20230100004', 'Oke'),
+(10, 'J20230100005', 'Siiip'),
+(11, 'J20230100006', 'Biasa saja'),
+(12, 'J20230100007', 'Okelah'),
+(13, 'J20230100008', 'mantab Jiwa'),
+(14, 'J20230100009', 'Puaslah'),
+(15, 'J20230100010', 'Payah'),
+(16, 'J20230100011', 'Lumayan'),
+(17, 'J20230100012', 'Recomended');
 
 -- --------------------------------------------------------
 
@@ -206,17 +321,20 @@ CREATE TABLE `tb_tiket_bus` (
   `tujuan` varchar(100) DEFAULT NULL,
   `tgl_keberangkatan` datetime DEFAULT NULL,
   `jumlah_max` int(11) DEFAULT NULL,
-  `harga` int(11) DEFAULT NULL
+  `harga` int(11) DEFAULT NULL,
+  `tipe_tiket` enum('ANTAR KOTA','WISATA') DEFAULT NULL,
+  `tiket_scanned` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tb_tiket_bus`
 --
 
-INSERT INTO `tb_tiket_bus` (`id_tiket_bus`, `id_bus`, `lokasi_kumpul`, `tujuan`, `tgl_keberangkatan`, `jumlah_max`, `harga`) VALUES
-('20230100001', 'BS000001', 'Terminal Jati', 'Purwokerto', '2023-01-18 14:18:55', 50, 50000),
-('20230100002', 'BS000002', 'Terminal Jati', 'Yogyakarta', '2023-01-20 04:18:55', 52, 60000),
-('20230100003', 'BS000002', 'Garasi PO. Bus', 'Yogyakarta', '2023-01-20 09:00:00', 52, 60000);
+INSERT INTO `tb_tiket_bus` (`id_tiket_bus`, `id_bus`, `lokasi_kumpul`, `tujuan`, `tgl_keberangkatan`, `jumlah_max`, `harga`, `tipe_tiket`, `tiket_scanned`) VALUES
+('20230100001', 'BS000001', 'Terminal Jati', 'Purwokerto', '2023-01-18 14:18:55', 50, 50000, 'ANTAR KOTA', 0),
+('20230100002', 'BS000002', 'Terminal Jati', 'Yogyakarta', '2023-01-20 04:18:55', 52, 60000, 'ANTAR KOTA', 0),
+('20230100003', 'BS000002', 'Garasi PO. Bus', 'Yogyakarta', '2023-01-20 09:00:00', 52, 60000, 'WISATA', 2),
+('20230100004', 'BS000002', 'Universitas Muria Kudus (UMK)', 'KKL ke Jakarta', '2023-01-31 07:00:00', 52, 600000, 'WISATA', 0);
 
 -- --------------------------------------------------------
 
@@ -237,8 +355,12 @@ CREATE TABLE `tb_user` (
 --
 
 INSERT INTO `tb_user` (`id_user`, `username`, `password`, `nm_pengguna`, `level`) VALUES
-('U2300001', 'PELANGGAN', 'PELANGGAN', 'PELANGGAN 1', 'PELANGGAN'),
-('U2300002', 'User', 'Password', 'Test Nama', 'PELANGGAN');
+('U2300000', 'admin', 'admin', 'ADMIN', 'ADMIN'),
+('U2300001', 'PELANGGAN', 'PELANGGAN', 'Lastri', 'PELANGGAN'),
+('U2300002', 'User', 'Password', 'Paijo', 'PELANGGAN'),
+('U2300003', 'DIREKTUR', 'DIREKTUR', 'Berlian Direktur', 'DIREKTUR'),
+('U2300004', 'SEKERTARIS', 'SEKERTARIS', 'BERLIAN SEKERTARIS', 'SEKERTARIS'),
+('U2300005', 'akuu', 'akuu', 'Akuu', 'PELANGGAN');
 
 --
 -- Indexes for dumped tables
@@ -299,6 +421,12 @@ ALTER TABLE `tb_penjualan_tiket`
   ADD PRIMARY KEY (`id_penjualan_tiket`);
 
 --
+-- Indexes for table `tb_saran`
+--
+ALTER TABLE `tb_saran`
+  ADD PRIMARY KEY (`id_saran`);
+
+--
 -- Indexes for table `tb_tiket_bus`
 --
 ALTER TABLE `tb_tiket_bus`
@@ -309,6 +437,16 @@ ALTER TABLE `tb_tiket_bus`
 --
 ALTER TABLE `tb_user`
   ADD PRIMARY KEY (`id_user`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tb_saran`
+--
+ALTER TABLE `tb_saran`
+  MODIFY `id_saran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

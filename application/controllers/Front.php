@@ -28,6 +28,13 @@ class Front extends CI_Controller {
     $this->load->view('pelanggan/footer');
   }
 
+  public function gallery(){
+    
+    $this->load->view('pelanggan/header');
+    $this->load->view('pelanggan/gallery');
+    $this->load->view('pelanggan/footer');
+  }
+
   public function login(){
     $this->load->view('login');
   }
@@ -129,6 +136,59 @@ class Front extends CI_Controller {
     $output = array("status" => "success", "message" => "Data Berhasil Disimpan, Terima Kasih telah meluangkan waktu ");
     echo json_encode($output);
 
+  }
+
+  public function getJadwal(){
+    $data = $this->db->query("
+      SELECT B.no_pol, C.nm_jenis_bus, A.tujuan, A.tgl_keberangkatan, 
+      A.harga, A.jumlah_max, A.lokasi_kumpul
+      from tb_tiket_bus A
+      inner join tb_bus B ON A.id_bus = B.id_bus
+      INNER JOIN tb_jenis_bus C ON B.id_jenis_bus = C.id_jenis_bus
+      WHERE A.tipe_tiket = '".$this->input->post('jenis_tiket')."'
+      AND A.tujuan = '".$this->input->post('tujuan')."'
+      AND DATE(A.tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."'
+    ")->result();
+
+    $tr="";
+    
+    foreach ($data as $list) {
+      $tr .= '<tr class="">
+                <td class="product-name">
+                  <h3>Nopol: '.$list->no_pol.'</h3>
+                  <p class="mb-0 rated">'.$list->nm_jenis_bus.'</p>
+                </td>
+                
+                <td class="price">
+                  <div class="price-name">
+                    <span class="subheading">'.$list->lokasi_kumpul.'</span>
+                  </div>
+                </td>
+
+                <td class="price">
+                  <div class="price-name">
+                    <span class="subheading">'.$list->tgl_keberangkatan.'</span>
+                  </div>
+                </td>
+                
+                <td class="price">
+                  <div class="price-name">
+                    <h3>
+                      <span class="num"><small class="currency" style="left:-25px;">Rp. </small> '.number_format($list->harga,0,',','.').',-</span>
+                      <span class="per">/per Sheet</span>
+                    </h3>
+                  </div>
+                </td>
+
+                <td class="price">
+                  <div class="price-name">
+                    <span class="subheading">'.$list->jumlah_max.'</span>
+                  </div>
+                </td>
+              </tr>';
+    }
+
+    echo $tr;
   }
 
 }

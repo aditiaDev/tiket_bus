@@ -184,6 +184,7 @@ class Penjualan extends CI_Controller {
               "tgl_keberangkatan" => $TGL_BERANGKAT,
               "jumlah_pembelian" => $this->input->post('jumlah_pembelian'),
               "jenis_penjualan_tiket" => 'OFFLINE',
+              "status_tiket" => 'BELUM SCAN',
             );
 
 

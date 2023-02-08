@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Penjualan Tiket Bus</title>
+  <title>Berlian Jaya</title>
   <link rel="shortcut icon" type="image/icon" href="<?php echo base_url('/assets/furn/assets/logo/favicon.png'); ?>"/>
   <!-- Google Font: Source Sans Pro -->
   <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
@@ -140,8 +140,8 @@
           <img src="<?php echo base_url('/assets/adminlte/dist/img/user2-160x160.jpg'); ?>" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <!-- <a href="#" class="d-block"><?php echo strtoupper($this->session->userdata('username')); ?></a> -->
-          <a href="#" class="d-block">Admin</a>
+          <!-- <a href="#" class="d-block"></a> -->
+          <a href="#" class="d-block"><?php echo strtoupper($this->session->userdata('level')); ?></a>
         </div>
       </div>
 

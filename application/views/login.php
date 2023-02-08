@@ -39,8 +39,8 @@
           <input class="form__input" type="text" name="nm_pelanggan" placeholder="Nama">
           <input class="form__input" type="text" name="no_pelanggan" placeholder="No. Telpone">
           <textarea name="alamat_pelanggan" class="form__input" style="height:unset;padding-top: 10px;" rows="3" placeholder="Alamat"></textarea>
-          <input class="form__input" type="text" name="usernm" placeholder="Email">
-          <input class="form__input" type="password" name="pass" placeholder="Password">
+          <input class="form__input" type="text" name="username" placeholder="Email">
+          <input class="form__input" type="password" name="password" placeholder="Password">
           <button class="form__button button" type="submit">SIGN UP</button>
         </form>
       </div>
@@ -90,7 +90,6 @@
       })
 
       $("#FRM_REGISTER").submit(function(event){
-
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({

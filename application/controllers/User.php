@@ -25,12 +25,30 @@ class User extends CI_Controller {
   	echo json_encode($data);
   }
 
-  
+  public function generateId(){
+    $unik = 'U'.date('y');
+    $kode = $this->db->query("SELECT MAX(id_user) LAST_NO FROM tb_user WHERE id_user LIKE '".$unik."%'")->row()->LAST_NO;
+    // mengambil angka dari kode barang terbesar, menggunakan fungsi substr
+    // dan diubah ke integer dengan (int)
+    $urutan = (int) substr($kode, 3, 5);
+    
+    // bilangan yang diambil ini ditambah 1 untuk menentukan nomor urut berikutnya
+    $urutan++;
+    
+    // membentuk kode barang baru
+    // perintah sprintf("%03s", $urutan); berguna untuk membuat string menjadi 3 karakter
+    // misalnya perintah sprintf("%03s", 15); maka akan menghasilkan '015'
+    // angka yang diambil tadi digabungkan dengan kode huruf yang kita inginkan, misalnya BRG 
+    $huruf = $unik;
+    $kode = $huruf . sprintf("%05s", $urutan);
+    return $kode;
+  }
 
   public function saveData(){
     
     
     $this->load->library('form_validation');
+    $this->form_validation->set_rules('nm_pengguna', 'Nama Pengguna', 'required');
     $this->form_validation->set_rules('username', 'Username', 'required|is_unique[tb_user.username]');
     $this->form_validation->set_rules('password', 'password', 'required|min_length[6]');
     $this->form_validation->set_rules('level', 'Level', 'required');
@@ -41,8 +59,12 @@ class User extends CI_Controller {
       echo json_encode($output);
       return false;
     }
+
+    $id = $this->generateId();
     
     $data = array(
+              "id_user" => $id,
+              "nm_pengguna" => $this->input->post('nm_pengguna'),
               "username" => $this->input->post('username'),
               "password" => $this->input->post('password'),
               "level" => $this->input->post('level'),
@@ -56,6 +78,7 @@ class User extends CI_Controller {
   public function updateData(){
 
     $this->load->library('form_validation');
+    $this->form_validation->set_rules('nm_pengguna', 'Nama Pengguna', 'required');
     $this->form_validation->set_rules('username', 'Username', 'required');
     $this->form_validation->set_rules('password', 'password', 'required|min_length[6]');
     $this->form_validation->set_rules('level', 'Level', 'required');
@@ -68,6 +91,7 @@ class User extends CI_Controller {
     }
 
     $data = array(
+      "nm_pengguna" => $this->input->post('nm_pengguna'),
       "username" => $this->input->post('username'),
       "password" => $this->input->post('password'),
       "level" => $this->input->post('level'),

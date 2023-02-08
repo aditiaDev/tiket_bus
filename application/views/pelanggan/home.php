@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.css'); ?>">
   <div class="hero-wrap" style="background-image: url('<?php echo base_url('/assets/front/images/') ?>bus.jpg ');" data-stellar-background-ratio="0.5">
     <div class="overlay">
     </div>
@@ -10,15 +11,7 @@
               <div class="d-flex flex-md-column list-group" id="list-tab" role="tablist">
                 <a class="list-group-item active" id="list-ticket-list" data-toggle="list" href="#list-ticket" role="tab" aria-controls="ticket" aria-selected="false">
                   <i class="fas fa-ticket-alt"></i>
-                  <span style="font-size:14px;">Cek Jadwal Antar kota</span>
-                </a>
-                <a class="list-group-item" id="list-ticket-wisata" data-toggle="list" href="#list-ticket-wisata" role="tab" aria-controls="ticket" aria-selected="false">
-                  <i class="fas fa-ticket-alt"></i>
-                  <span style="font-size:14px;">Cek Jadwal Tiket Wisata</span>
-                </a>
-                <a class="list-group-item" id="list-cektiket-list" data-toggle="list" href="#list-cektiket" role="tab" aria-controls="cektiket" aria-selected="true">
-                  <i class="fas fa-receipt"></i>
-                  <span style="font-size:14px;">Cek Tiket</span>
+                  <span style="font-size:14px;">Jadwal Keberangkatan</span>
                 </a>
               </div>
             </div>
@@ -28,53 +21,32 @@
                   <form >
                     <div class="d-md-flex mt-2">
                       <div class="form-group col-12 col-md-4">
+                        <label for="" class="label">Jenis Tiket</label>
+                        <select name="jenis_tiket" class="form-control">
+                          <option></option>
+                          <option value="ANTAR KOTA">ANTAR KOTA</option>
+                          <option value="WISATA">WISATA</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-12 col-md-4">
                         <label for="" class="label">Tanggal keberangkatan</label>
-                        <input type="text" class="form-control" id="book_pick_date" placeholder="Tanggal keberangkatan">
+                        <input type="text" class="form-control date" name="tgl_keberangkatan" onChange="ISI_TUJUAN()" placeholder="Tanggal keberangkatan">
                       </div>
                       <div class="form-group col-12 col-md-4">
                         <label for="" class="label">Tujuan</label>
-                        <input type="text" class="form-control"  placeholder="kota Tujuan">
-                      </div>
-                      <div class="form-group col-12 col-md-4">
-                        <label for="" class="label">Armada</label>
-                        <select class="form-control"></select>
-                      </div>
-                    </div>
-
-                    <div class="d-md-flex">
-                      <div class="form-group col-12 col-md-6">
-                        <label for="" class="label">Pilih Bus</label>
-                        <select class="form-control"></select>
-                      </div>
-                      <div class="form-group col-12 col-md-6">
-                        <label for="" class="label">Jumlah Penumpang</label>
-                        <input type="text" class="form-control" placeholder="Jumlah Tiket">
+                        <select class="form-control select2" name="tujuan" ></select>
                       </div>
                     </div>
                     
                     <div class="d-md-flex">
                       <div class="form-group col-12 col-md-12" style="text-align: right;">
-                        <button type="button" class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cari Tiket</button>
+                        <button type="button" id="btnCekAntarKota" class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cek Jadwal</button>
                       </div>
                     </div>
                   </form>
                 </div>
                 
-                <div class="tab-pane fade" id="list-cektiket" role="tabpanel" aria-labelledby="list-ticket-list">
-                <form >
-                    <div class="d-md-flex mt-2">
-                      <div class="form-group col-12 col-md-12">
-                        <label for="" class="label">Masukkan Nomor Tiket Anda</label>
-                        <input type="text" class="form-control" name="" placeholder="Masukkan Nomor Tiket Anda">
-                      </div>
-                    </div>
-                    <div class="d-md-flex">
-                      <div class="form-group col-12 col-md-12" style="text-align: right;">
-                        <button type="button" class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cek Tiket</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -82,6 +54,58 @@
       </div>
     </div>
   </div>
+
+
+  <section class="ftco-section ftco-cart" id="colData" style="display:none;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 ftco-animate">
+          <div class="car-list">
+            <table class="table">
+              <thead class="thead-primary">
+                <tr class="text-center">
+                  <th>&nbsp;</th>
+                  <th class="bg-primary heading">Lokasi kumpul</th>
+                  <th class="bg-primary heading">Keberangkatan</th>
+                  <th class="bg-dark heading">Harga Tiket</th>
+                  <th class="bg-black heading">Maximal<br>Penumpang</th>
+                </tr>
+              </thead>
+              <tbody id="tbData">
+                <!-- <tr class="">
+                  <td class="product-name">
+                    <h3>Nopol: K 7124 KB</h3>
+                    <p class="mb-0 rated">Bus Non-High Decker (Normal Deck)</p>
+                  </td>
+                  
+                  <td class="price">
+                    <div class="price-name">
+                      <span class="subheading">Terminal Jati</span>
+                    </div>
+                  </td>
+                  
+                  <td class="price">
+                    <div class="price-name">
+                      <h3>
+                        <span class="num"><small class="currency" style="left:-25px;">Rp. </small> 15.000,-</span>
+                        <span class="per">/per Sheet</span>
+                      </h3>
+                    </div>
+                  </td>
+
+                  <td class="price">
+                    <div class="price-name">
+                      <span class="subheading">10</span>
+                    </div>
+                  </td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="ftco-section services-section ftco-no-pt ftco-no-pb">
     <div class="container">
@@ -259,3 +283,60 @@
       </div>
     </div>
   </section>
+
+<script src="<?php echo base_url('/assets/front/js/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.js'); ?>"></script>
+<script>
+  $(".date").flatpickr({
+      dateFormat: "Y-m-d",
+  });
+
+  $(document).ready(function (){
+      $("#btnCekAntarKota").click(function (){
+          $('html, body').animate({
+              scrollTop: $("#colData").offset().top
+          }, 1500);
+          ISI_TABLE()
+          $("#colData").css("display","")
+      });
+  });
+
+  function ISI_TUJUAN(){
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getTujuanBusAntarKota') ?>",
+      type: "POST",
+      data: {
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val(),
+        jenis_tiket: $("[name='jenis_tiket']").val(),
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var row = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          row += "<option value='"+val.tujuan+"'>"+val.tujuan+"</option>"
+          
+        });
+        $("[name='tujuan']").html(row)
+      }
+    })
+    
+  }
+
+  function ISI_TABLE(){
+    $.ajax({
+      url: "<?php echo site_url('/front/getJadwal') ?>",
+      type: "POST",
+      dataType: "HTML",
+      data:{
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val(),
+        tujuan: $("[name='tujuan']").val(),
+        jenis_tiket: $("[name='jenis_tiket']").val(),
+      },
+      success: function(data){
+        $("#tbData").html(data)
+      }
+    })
+  }
+
+</script>
