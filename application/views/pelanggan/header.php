@@ -42,7 +42,14 @@
 	          <li class="nav-item active"><a href="<?php echo base_url("front/")?>" class="nav-link">Home</a></li>
 	          <li class="nav-item"><a href="<?php echo base_url("front/gallery")?>" class="nav-link">Gallery</a></li>
             <li class="nav-item"><a href="<?php echo base_url("front/feedback")?>" class="nav-link">Feedback</a></li>
-	        </ul>
+            <?php
+              if($this->session->userdata('id_user')){
+            ?>
+                <li class="nav-item"><a href="<?php echo base_url("front/history")?>" class="nav-link">History</a></li>
+            <?php
+              }
+            ?>
+          </ul>
           <?php
             if(!$this->session->userdata('id_user')){
           ?>

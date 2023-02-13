@@ -35,6 +35,13 @@ class Front extends CI_Controller {
     $this->load->view('pelanggan/footer');
   }
 
+  public function history(){
+    
+    $this->load->view('pelanggan/header');
+    $this->load->view('pelanggan/history');
+    $this->load->view('pelanggan/footer');
+  }
+
   public function login(){
     $this->load->view('login');
   }
@@ -190,5 +197,58 @@ class Front extends CI_Controller {
 
     echo $tr;
   }
+
+
+  public function zenziva_api(){
+    
+    
+    $now = date('Y-m-d');
+    $data = $this->db->query("
+      select id_penjualan_tiket, no_pelanggan, nm_pelanggan, tgl_keberangkatan from tb_penjualan_tiket 
+      where DATEDIFF(tgl_keberangkatan, '".$now."') = 1
+      AND ( notif_wa <> 'TERKIRIM' or notif_wa is NULL )
+    ")->result();
+
+    if($data){
+      foreach ($data as $row) {
+
+        $this->db->query("
+          UPDATE tb_penjualan_tiket SET notif_wa='TERKIRIM' WHERE id_penjualan_tiket = '".$row->id_penjualan_tiket."'
+        ");
+        
+        // echo "<br>".$row->no_pelanggan;
+        // echo "<br>".$row->nm_pelanggan;
+        // echo "<br>".$row->tgl_keberangkatan;
+
+        $userkey = "8jhyem";
+        $passkey = "n65hmpn9lo";
+        $url = "https://console.zenziva.net/wareguler/api/sendWA/";
+
+        $curlHandle = curl_init();
+        curl_setopt($curlHandle, CURLOPT_URL, $url);
+        curl_setopt($curlHandle, CURLOPT_HEADER, 0);
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curlHandle, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curlHandle, CURLOPT_POST, 1);
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, array(
+            'userkey' => $userkey,
+            'passkey' => $passkey,
+            'to' => $row->no_pelanggan,
+            'message' => "Pelanggan ".$row->nm_pelanggan." Yth. Kami dari PO Berlian, mengingatkan keberangkatan Bus anda pada ".$row->tgl_keberangkatan.". Mohon untuk tidak lupa membawa tiket anda. Terima kasih, Salam"
+        ));
+        $results = json_decode(curl_exec($curlHandle), true);
+        curl_close($curlHandle);
+        // return $results['text'];
+      }
+    }else{
+      $output = array("status" => "selesai");
+      echo json_encode($output);
+    }
+    
+    
+
+}
 
 }

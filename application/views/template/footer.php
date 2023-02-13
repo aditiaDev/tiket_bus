@@ -54,5 +54,27 @@
 <script src="<?php echo base_url('/assets/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js');?>"></script>
 <script src="<?php echo base_url('/assets/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js');?>"></script>
 
+<script>
+  var timer = null
+  timer = setInterval(function() {
+    zenziva_api()
+  }, 5000);
+
+  function zenziva_api(){
+    $.ajax({
+      url: "<?php echo site_url('front/zenziva_api') ?>",
+      type: "POST",
+      dataType: "JSON",
+      success: function(data){
+        console.log(data)
+        if(data.status == "selesai"){
+          clearInterval(timer);
+          timer = null
+        }
+      }
+    })
+  }
+</script>
+
 </body>
 </html>

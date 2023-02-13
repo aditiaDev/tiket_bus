@@ -356,6 +356,26 @@
 <script src="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.js'); ?>"></script>
 <script>
 
+var timer = null
+  timer = setInterval(function() {
+    zenziva_api()
+  }, 5000);
+
+  function zenziva_api(){
+    $.ajax({
+      url: "<?php echo site_url('front/zenziva_api') ?>",
+      type: "POST",
+      dataType: "JSON",
+      success: function(data){
+        console.log(data)
+        if(data.status == "selesai"){
+          clearInterval(timer);
+          timer = null
+        }
+      }
+    })
+  }
+
   $(".date").flatpickr({
       dateFormat: "Y-m-d",
   });
@@ -489,7 +509,7 @@
       contentType : false,
       success: function(data){
         data = JSON.parse(data)
-        console.log(data)
+        // console.log(data)
         if (data.status == "success") {
           toastr.info(data.message)
 

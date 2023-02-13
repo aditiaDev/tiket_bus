@@ -257,6 +257,23 @@ class Penjualan extends CI_Controller {
   	echo json_encode($data);
   }
 
+  public function getHistoryTiket(){
+    $data['data'] = $this->db->query("select A.id_penjualan_tiket, DATE_FORMAT(A.tgl_pembelian, \"%d %b %Y\") tgl_pembelian, 
+    DATE_FORMAT(A.tgl_keberangkatan, \"%d %b %Y\") tgl_keberangkatan, 
+    DATE_FORMAT(A.tgl_keberangkatan, \"%H:%i\") waktu_keberangkatan, 
+    B.tujuan, C.no_pol, D.nm_jenis_bus, (A.jumlah_pembelian * B.harga) as nominal, E.status_validasi 
+    from tb_penjualan_tiket A
+    left join tb_pembayaran_tiket E on A.id_penjualan_tiket = E.id_penjualan_tiket
+    left join tb_tiket_bus B on A.id_tiket_bus = B.id_tiket_bus 
+    left join tb_bus C on B.id_bus = C.id_bus 
+    left join tb_jenis_bus D on C.id_jenis_bus = D.id_jenis_bus 
+    where A.id_pelanggan in (
+    select id_pelanggan from tb_pelanggan where ID_USER = '".$this->session->userdata('id_user')."'
+    )")->result(); 
+
+  	echo json_encode($data);
+  }
+
   public function saveDataFront(){
     
     
