@@ -27,7 +27,6 @@
                   <th>ID Penilaian</th>
                   <th>ID Ticket Bus</th>
                   <th>Nilai Kepuasan</th>
-                  <th style="min-width: 120px;">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -149,13 +148,6 @@
           },
           { "data": "id_penilaian" },
           { "data": "id_tiket_bus" },{ "data": "nilai_kepuasan" },
-          { "data": null, 
-            "render" : function(data){
-              return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
-                "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_jenis_bus+"\");'><i class='fas fa-trash'></i> Delete</button>"
-            },
-            className: "text-center"
-          },
       ]
     })
   }

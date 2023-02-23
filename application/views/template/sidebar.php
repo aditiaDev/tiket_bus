@@ -69,6 +69,15 @@
           </li>
 
           <li class="nav-item">
+            <a href="<?php echo base_url("kepuasan/")?>" class="nav-link">
+              <i class="nav-icon fas fa-receipt"></i>
+              <p>
+                Kepuasan Pelanggan
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="<?php echo base_url("login/logout")?>" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
@@ -142,14 +151,15 @@
 
           <?php }else{ ?>
 
-            <li class="nav-item">
-            <a href="<?php echo base_url("kepuasan/")?>" class="nav-link">
-              <i class="nav-icon fas fa-receipt"></i>
+          <li class="nav-item">
+            <a href="<?php echo base_url("report/pelanggan")?>" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
               <p>
-                Kepuasan Pelanggan
+                Data Pelanggan
               </p>
             </a>
           </li>
+
 
           <li class="nav-item">
             <a href="#" class="nav-link">

@@ -12,7 +12,7 @@ class Report extends CI_Controller {
   public function kepuasan(){
     $this->load->view('template/header');
     $this->load->view('template/sidebar');
-    $this->load->view('pages/kepuasan');
+    $this->load->view('pages/report_kepuasan');
     $this->load->view('template/footer');
   }
 
@@ -28,6 +28,23 @@ class Report extends CI_Controller {
     $this->load->view('template/sidebar');
     $this->load->view('pages/report_pemesanan');
     $this->load->view('template/footer');
+  }
+
+  public function getPenjualan(){
+    $data['data'] = $this->db->query("
+      select A.id_penjualan_tiket, A.id_tiket_bus, B.tujuan, B.tgl_keberangkatan,  
+      C.nm_pelanggan, A.tgl_pembelian, B.harga, A.jumlah_pembelian, (B.harga * A.jumlah_pembelian) nominal,
+      A.jenis_penjualan_tiket 
+      from tb_penjualan_tiket A
+      inner join tb_tiket_bus B on A.id_tiket_bus = B.id_tiket_bus 
+      inner join tb_pelanggan C on A.id_pelanggan = C.id_pelanggan
+      WHERE
+      a.tgl_pembelian  >= '".$this->input->post('start_date')."'
+      AND a.tgl_pembelian  < DATE(DATE_ADD('".$this->input->post('end_date')."', INTERVAL 1 DAY))
+      order by A.tgl_keberangkatan, A.tgl_pembelian
+    ")->result_array();
+
+    echo json_encode($data);
   }
 
   public function cetakTiket(){

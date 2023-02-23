@@ -19,7 +19,8 @@ class Bus extends CI_Controller {
 
   public function getAllData(){
         
-    $data['data'] = $this->db->query("SELECT b.id_bus, a.id_jenis_bus, a.nm_jenis_bus, b.no_pol, b.jumlah_kursi FROM tb_jenis_bus a
+    $data['data'] = $this->db->query("SELECT b.id_bus, a.id_jenis_bus, a.nm_jenis_bus, b.no_pol, 
+    b.jumlah_kursi, b.foto, b.deskripsi FROM tb_jenis_bus a
     inner JOIN tb_bus b ON a.id_jenis_bus = b.id_jenis_bus")->result(); 
 
   	echo json_encode($data);
@@ -30,6 +31,27 @@ class Bus extends CI_Controller {
 
   	echo json_encode($data);
   }
+
+  private function _do_upload(){
+		$config['upload_path']          = 'assets/images/';
+    $config['allowed_types']        = 'gif|jpg|jpeg|png';
+    $config['max_size']             = 5000; //set max size allowed in Kilobyte
+    $config['max_width']            = 4000; // set max width image allowed
+    $config['max_height']           = 4000; // set max height allowed
+    $config['file_name']            = round(microtime(true) * 1000); //just milisecond timestamp fot unique name
+
+    $this->load->library('upload', $config);
+
+    if(!$this->upload->do_upload('foto')) //upload and validate
+    {
+      $data['inputerror'] = 'foto';
+			$data['message'] = 'Upload error: '.$this->upload->display_errors('',''); //show ajax error
+			$data['status'] = FALSE;
+			echo json_encode($data);
+			exit();
+		}
+		return $this->upload->data('file_name');
+	}
 
   public function generateId(){
     $unik = 'BS';
@@ -57,6 +79,7 @@ class Bus extends CI_Controller {
     $this->form_validation->set_rules('id_jenis_bus', 'Jenis Bus', 'required');
     $this->form_validation->set_rules('no_pol', 'No. Polisi', 'required|is_unique[tb_bus.no_pol]');
     $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required');
+    $this->form_validation->set_rules('deskripsi', 'Deskripsii', 'required');
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -72,7 +95,13 @@ class Bus extends CI_Controller {
               "id_jenis_bus" => $this->input->post('id_jenis_bus'),
               "no_pol" => $this->input->post('no_pol'),
               "jumlah_kursi" => $this->input->post('jumlah_kursi'),
+              "deskripsi" => $this->input->post('deskripsi'),
             );
+
+    if(!empty($_FILES['foto']['name'])){
+      $upload = $this->_do_upload();
+      $data['foto'] = $upload;
+    }
 
 
     $this->db->insert('tb_bus', $data);
@@ -81,14 +110,14 @@ class Bus extends CI_Controller {
 
   }
 
-  public function updateData(){
+  public function updateData($id){
     
     
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('id_bus', 'ID Bus', 'required');
     $this->form_validation->set_rules('id_jenis_bus', 'Jenis Bus', 'required');
     $this->form_validation->set_rules('no_pol', 'No. Polisi', 'required');
     $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required');
+    $this->form_validation->set_rules('deskripsi', 'Deskripsii', 'required');
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -101,10 +130,15 @@ class Bus extends CI_Controller {
       "id_jenis_bus" => $this->input->post('id_jenis_bus'),
       "no_pol" => $this->input->post('no_pol'),
       "jumlah_kursi" => $this->input->post('jumlah_kursi'),
+      "deskripsi" => $this->input->post('deskripsi'),
     );
 
+    if(!empty($_FILES['foto']['name'])){
+      $upload = $this->_do_upload();
+      $data['foto'] = $upload;
+    }
 
-    $this->db->where('id_bus', $this->input->post('id_bus'));
+    $this->db->where('id_bus', $id);
     $this->db->update('tb_bus', $data);
     if($this->db->error()['message'] != ""){
       $output = array("status" => "error", "message" => $this->db->error()['message']);

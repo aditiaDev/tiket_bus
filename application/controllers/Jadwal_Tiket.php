@@ -44,6 +44,8 @@ class Jadwal_Tiket extends CI_Controller {
       $datetime2 = new DateTime($row['tgl_keberangkatan']);
       $interval = $datetime1->diff($datetime2);
 
+      // print_r($interval);
+
       if($interval->y <> 0 or $interval->m <> 0 or $interval->d <> 0){
 
         echo "

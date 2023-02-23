@@ -55,101 +55,27 @@
 <section class="ftco-section">
   <div class="container">
     <div class="row">
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus1.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7245 GB</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus2.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7100 AK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus3.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7069 OB</a></h2> -->
-            <span>Mercedes Benz</span>
+      <?php
+        $data = $this->db->query("SELECT b.id_bus, a.id_jenis_bus, a.nm_jenis_bus, b.no_pol, 
+        b.jumlah_kursi, b.foto, b.deskripsi FROM tb_jenis_bus a
+        inner JOIN tb_bus b ON a.id_jenis_bus = b.id_jenis_bus")->result();
+        foreach($data as $row){
+      ?>
+        <div class="col-md-3">
+          <div class="car-wrap ftco-animate">
+            <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/'.$row->foto) ?>');">
+              
+            </div>
+            <div class="text p-4 text-center">
+              <!-- <h2 class="mb-0"><a href="car-single.html">K 7245 GB</a></h2> -->
+              <span><a href="<?php echo base_url("front/detail/".$row->id_bus)?>"><?php echo $row->nm_jenis_bus ?></a></span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus4.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7125 BK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus5.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 1425 CK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus6.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7345 bK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus7.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7345 bK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="car-wrap ftco-animate">
-          <div class="img d-flex align-items-end" style="background-image: url('<?php echo base_url('/assets/images/') ?>bus8.jpg');">
-            
-          </div>
-          <div class="text p-4 text-center">
-            <!-- <h2 class="mb-0"><a href="car-single.html">K 7345 bK</a></h2> -->
-            <span>Mercedes Benz</span>
-          </div>
-        </div>
-      </div>
+      <?php
+        }
+      ?>
       
     </div>
     

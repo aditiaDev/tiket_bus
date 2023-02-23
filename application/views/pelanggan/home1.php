@@ -161,7 +161,7 @@
                 </div>
                 <div class="d-md-flex">
                   <div class="form-group col-12 col-md-12" style="text-align: right;">
-                    <button type="submit" id="btnCetak" disabled class="btn btn-primary py-3 px-4"><i class="fas fa-search"></i> Cetak Tiket</button>
+                    <button type="submit" id="btnCetak" disabled class="btn btn-primary py-3 px-4"><i class="fas fa-print"></i> Cetak Tiket</button>
                   </div>
                 </div>
               </form>

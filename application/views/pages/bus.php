@@ -6,7 +6,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-8">
+        <div class="col-12">
           <div class="card" style="margin-top: 1rem">
             <div class="card-header">
               <h3 class="card-title">Data Bus</h3>
@@ -22,6 +22,8 @@
                   <th>Jenis Bus</th>
                   <th>Nopol</th>
                   <th>Jumlah Kursi</th>
+                  <th>Foto</th>
+                  <th>Deskripsi</th>
                   <th style="min-width: 120px;">Action</th>
                 </tr>
                 </thead>
@@ -41,7 +43,7 @@
     <div class="modal fade" id="modal_add">
       <div class="modal-dialog ">
         <div class="modal-content">
-          <form id="FRM_DATA">
+          <form id="FRM_DATA" method="post" enctype="multipart/form-data">
             <div class="modal-header">
               <h4 class="modal-title">Data</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -50,7 +52,7 @@
             </div>
             <div class="modal-body">
               
-            <div class="form-group">
+                <div class="form-group">
                   <label>Jenis Bus</label>
                   <select name="id_jenis_bus" class="form-control"></select>
                 </div>
@@ -71,12 +73,22 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="form-group">
+                  <label>Foto Bus</label>
+                  <input type="file" name="foto" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <label>Deskripsi Bus</label>
+                  <textarea name="deskripsi" class="form-control" rows="3"></textarea>
+                </div>
                 
               </div>
               
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="BTN_SAVE">Save changes</button>
+              <button type="submit" class="btn btn-primary" id="BTN_SAVE">Save changes</button>
             </div>
           </form>
         </div>
@@ -110,21 +122,7 @@
 
     
 
-    $("#BTN_SAVE").click(function(){
-      event.preventDefault();
-      var formData = $("#FRM_DATA").serialize();
-
-      
-      if(save_method == 'save') {
-          urlPost = "<?php echo site_url('bus/saveData') ?>";
-      }else{
-          urlPost = "<?php echo site_url('bus/updateData') ?>";
-          formData+="&id_bus="+id_edit
-      }
-      // console.log(formData)
-      ACTION(urlPost, formData)
-      $("#modal_add").modal('hide')
-    })
+    
 
 
   });
@@ -164,6 +162,18 @@
           { "data": "id_bus" },
           { "data": "nm_jenis_bus" },
           { "data": "no_pol" },{ "data": "jumlah_kursi", class : "text-right" },
+          { "data": "foto", 
+            "render" : function(data){
+              if(data == ""){
+                return "Tidak ada Foto"
+              }else{
+                return "<a target='_blank' href='<?php echo base_url() ?>assets/images/"+data+"'><img  style='max-width: 120px;' class='img-fluid' src='<?php echo base_url() ?>assets/images/"+data+"' ></a>"
+              }
+              
+            },
+            className: "text-center"
+          },
+          { "data": "deskripsi" },
           { "data": null, 
             "render" : function(data){
               return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
@@ -175,18 +185,28 @@
     })
   }
 
+    // $("#BTN_SAVE").click(function(){
+    //   event.preventDefault();
+    //   var formData = $("#FRM_DATA").serialize();
+
+      
+    //   if(save_method == 'save') {
+    //       urlPost = "<?php echo site_url('bus/saveData') ?>";
+    //   }else{
+    //       urlPost = "<?php echo site_url('bus/updateData') ?>";
+    //       formData+="&id_bus="+id_edit
+    //   }
+    //   // console.log(formData)
+    //   ACTION(urlPost, formData)
+    //   $("#modal_add").modal('hide')
+    // })
+
   function ACTION(urlPost, formData){
       $.ajax({
           url: urlPost,
           type: "POST",
           data: formData,
           dataType: "JSON",
-          beforeSend: function () {
-            $("#LOADER").show();
-          },
-          complete: function () {
-            $("#LOADER").hide();
-          },
           success: function(data){
             // console.log(data)
             if (data.status == "success") {
@@ -202,6 +222,40 @@
       })
   }
 
+  $("#FRM_DATA").on('submit', function(event){
+    event.preventDefault();
+    let formData = new FormData(this);
+
+    if(save_method == 'save') {
+        urlPost = "<?php echo site_url('bus/saveData') ?>";
+    }else{
+        urlPost = "<?php echo site_url('bus/updateData/') ?>"+id_edit;
+    }
+
+    $.ajax({
+      url: urlPost,
+      type: "POST",
+      data: formData,
+      processData : false,
+      cache: false,
+      contentType : false,
+      success: function(data){
+        data = JSON.parse(data)
+        // console.log(data)
+        if (data.status == "success") {
+          toastr.info(data.message)
+          REFRESH_DATA()
+          $("#modal_add").modal('hide')
+        }else{
+          toastr.error(data.message)
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    })
+  })
+
   function editData(data, index){
     console.log(data)
     save_method = "edit"
@@ -212,6 +266,7 @@
     $("[name='id_jenis_bus']").val(data.id_jenis_bus)
     $("[name='jumlah_kursi']").val(data.jumlah_kursi)
     $("[name='no_pol']").val(data.no_pol)
+    $("[name='deskripsi']").val(data.deskripsi)
     $("#modal_add").modal('show')
   }
 

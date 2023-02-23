@@ -35,6 +35,18 @@ class Front extends CI_Controller {
     $this->load->view('pelanggan/footer');
   }
 
+  public function detail($id){
+
+    $data['data'] = $this->db->query("SELECT b.id_bus, a.id_jenis_bus, a.nm_jenis_bus, b.no_pol, 
+    b.jumlah_kursi, b.foto, b.deskripsi FROM tb_jenis_bus a
+    inner JOIN tb_bus b ON a.id_jenis_bus = b.id_jenis_bus
+    WHERE b.id_bus='".$id."'")->result_array();
+    
+    $this->load->view('pelanggan/header');
+    $this->load->view('pelanggan/detail',$data);
+    $this->load->view('pelanggan/footer');
+  }
+
   public function history(){
     
     $this->load->view('pelanggan/header');

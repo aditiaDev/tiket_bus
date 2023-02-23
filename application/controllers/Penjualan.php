@@ -45,6 +45,21 @@ class Penjualan extends CI_Controller {
   	echo json_encode($dataList);
   }
 
+  public function getPenjualanByID(){
+    $data = $this->db->query("SELECT A.id_penjualan_tiket, A.tgl_pembelian, A.id_tiket_bus, B.tujuan, 
+    DATE(A.tgl_keberangkatan) tgl_keberangkatan,
+    A.jumlah_pembelian, A.jenis_penjualan_tiket, C.no_pol, D.id_jenis_bus,
+    A.id_pelanggan, A.nm_pelanggan, A.no_pelanggan
+    FROM tb_penjualan_tiket A
+    INNER JOIN tb_tiket_bus B ON A.id_tiket_bus=B.id_tiket_bus
+    INNER JOIN tb_bus C ON B.id_bus=C.id_bus
+    LEFT JOIN tb_jenis_bus D ON C.id_jenis_bus = D.id_jenis_bus
+    WHERE A.id_penjualan_tiket = '".$this->input->post('id_penjualan_tiket')."'
+    ")->result(); 
+
+  	echo json_encode($data);
+  }
+
   public function addData(){
     $this->load->view('template/header');
     $this->load->view('template/sidebar');
@@ -213,8 +228,11 @@ class Penjualan extends CI_Controller {
     
     
     $this->load->library('form_validation');
-    $this->form_validation->set_rules('id_jenis_bus', 'ID Jenis', 'required');
-    $this->form_validation->set_rules('nm_jenis_bus', 'Jenis Bus', 'required');
+    $this->form_validation->set_rules('id_tiket_bus', 'Pilih Bus', 'required');
+    $this->form_validation->set_rules('id_pelanggan', 'Pelanggan', 'required');
+    $this->form_validation->set_rules('nm_pelanggan', 'Nama Pelanggan', 'required');
+    $this->form_validation->set_rules('no_pelanggan', 'No Pelanggan', 'required');
+    $this->form_validation->set_rules('jumlah_pembelian', 'Jumlah Pembelian', 'required');
 
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
@@ -223,13 +241,22 @@ class Penjualan extends CI_Controller {
       return false;
     }
 
+    $TGL_BERANGKAT = $this->db->query("select tgl_keberangkatan as TGL_BERANGKAT from tb_tiket_bus 
+    where id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->row()->TGL_BERANGKAT;
+
     $data = array(
-      "nm_jenis_bus" => $this->input->post('nm_jenis_bus'),
+      "id_tiket_bus" => $this->input->post('id_tiket_bus'),
+      "id_pelanggan" => $this->input->post('id_pelanggan'),
+      "nm_pelanggan" => $this->input->post('nm_pelanggan'),
+      "no_pelanggan" => $this->input->post('no_pelanggan'),
+      "tgl_pembelian" => date('Y-m-d H:i:s'),
+      "tgl_keberangkatan" => $TGL_BERANGKAT,
+      "jumlah_pembelian" => $this->input->post('jumlah_pembelian'),
     );
 
 
-    $this->db->where('id_jenis_bus', $this->input->post('id_jenis_bus'));
-    $this->db->update('tb_jenis_bus', $data);
+    $this->db->where('id_penjualan_tiket', $this->input->post('id_penjualan_tiket'));
+    $this->db->update('tb_penjualan_tiket', $data);
     if($this->db->error()['message'] != ""){
       $output = array("status" => "error", "message" => $this->db->error()['message']);
       echo json_encode($output);

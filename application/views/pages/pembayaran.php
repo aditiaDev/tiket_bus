@@ -29,7 +29,7 @@
                   <th>Total Bayar</th>
                   <th>Bukti Pembayaran</th>
                   <th>Status</th>
-                  <th style="min-width: 120px;">Action</th>
+                  <th style="min-width: 150px;">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -192,11 +192,23 @@
           { "data": "status_validasi" },
           { "data": null, 
             "render" : function(data){
-              return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
+              if(data.status_validasi == "TERVALIDASI"){
+                return "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button>"
+              }else{
+                return "<button class='btn btn-sm btn-warning' onclick='verifyData(\""+data.id_pembayaran+"\");'><i class='fas fa-edit'></i> Verifikasi</button> "+
                 "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button>"
+              }
+              
             },
             className: "text-center"
           },
+          // { "data": null, 
+          //   "render" : function(data){
+          //     return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
+          //       "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button>"
+          //   },
+          //   className: "text-center"
+          // },
       ]
     })
   }
@@ -272,7 +284,50 @@
 
     urlPost = "<?php echo site_url('pembayaran/deleteData') ?>";
     formData = "id_pembayaran="+id
-    ACTION(urlPost, formData)
+    $.ajax({
+        url: urlPost,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        success: function(data){
+          // console.log(data)
+          if (data.status == "success") {
+            toastr.info(data.message)
+            
+
+            REFRESH_DATA()
+
+          }else{
+            toastr.error(data.message)
+          }
+        }
+    })
+  }
+
+  function verifyData(id){
+    console.log(id)
+    if(!confirm('Verify this data?')) return
+
+    urlPost = "<?php echo site_url('pembayaran/verifyData') ?>";
+    formData = "id_pembayaran="+id
+    $.ajax({
+        url: urlPost,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        success: function(data){
+          // console.log(data)
+          if (data.status == "success") {
+            toastr.info(data.message)
+            
+
+            REFRESH_DATA()
+
+          }else{
+            toastr.error(data.message)
+          }
+        }
+    })
   }
 
   function ISI_ID_PENJUALAN(){

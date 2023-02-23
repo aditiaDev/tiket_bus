@@ -231,4 +231,23 @@ class Pembayaran extends CI_Controller {
     echo json_encode($output);
   }
 
+  public function verifyData(){
+    $id_pembayaran = $this->input->post('id_pembayaran');
+
+    $data = array(
+      "status_validasi" => "TERVALIDASI",
+      "tgl_bayar" => date('Y-m-d H:i:s'),
+    );
+
+    $this->db->where('id_pembayaran', $id_pembayaran);
+    $this->db->update('tb_pembayaran_tiket', $data);
+    if($this->db->error()['message'] != ""){
+      $output = array("status" => "error", "message" => $this->db->error()['message']);
+      echo json_encode($output);
+      return false;
+    }
+    $output = array("status" => "success", "message" => "Data Berhasil di Verifikasi");
+    echo json_encode($output);
+  }
+
 }

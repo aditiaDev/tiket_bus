@@ -69,7 +69,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Tujuan</label>
-                      <select class="form-control select2" name="tujuan" onChange="ISI_JENISBUS()"></select>
+                      <select class="form-control" name="tujuan" onChange="ISI_JENISBUS()"></select>
                     </div>
                   </div>
                 </div>
@@ -162,6 +162,9 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+
+
+
     <!-- /.modal -->
   </section>
 </div>
@@ -256,8 +259,13 @@
           { "data": "jumlah_pembelian" },{ "data": "jenis_penjualan_tiket" },
           { "data": null, 
             "render" : function(data){
-              return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
+              if(data.jenis_penjualan_tiket == "ONLINE"){
+                return "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_penjualan_tiket+"\");'><i class='fas fa-trash'></i> Delete</button>"
+              }else{
+                return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+
                 "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_penjualan_tiket+"\");'><i class='fas fa-trash'></i> Delete</button>"
+              }
+              
             },
             className: "text-center"
           },
@@ -293,14 +301,54 @@
   }
 
   function editData(data, index){
-    console.log(data)
+    // console.log(data)
     save_method = "edit"
     id_edit = data.id_penjualan_tiket;
 
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getPenjualanByID') ?>",
+      type: "POST",
+      data: {
+        id_penjualan_tiket: id_edit
+      },
+      dataType: "JSON",
+      success: function(data){
+        console.log(data[0])
+        $("[name='tgl_keberangkatan']").val(data[0].tgl_keberangkatan).change()
+        // $("[name='tujuan']").val(data[0].tujuan).trigger()
+        // $("[name='tujuan']").html("<option value='"+data[0].tujuan+"' selected>"+data[0].tujuan+"</option>")
+        setTimeout(() => {
+          $("[name='tujuan']").val(data[0].tujuan).change()
+        }, 500);
+
+        setTimeout(() => {
+          $("[name='id_jenis_bus']").val(data[0].id_jenis_bus).change()
+        }, 1000);
+
+        setTimeout(() => {
+          $("[name='id_tiket_bus']").val(data[0].id_tiket_bus).change()
+          $("[name='nm_pelanggan']").val(data[0].nm_pelanggan)
+          $("[name='no_pelanggan']").val(data[0].no_pelanggan)
+          var nominal = parseInt(data[0].jumlah_pembelian) * parseInt($("[name='harga_tiket']").val())
+          $("[nominal='nominal']").val(nominal)
+        }, 1500);
+
+        setTimeout(() => {
+          var nominal = parseInt(data[0].jumlah_pembelian) * parseInt($("[name='harga_tiket']").val())
+          console.log(nominal)
+          $("[name='nominal']").val(nominal)
+        }, 2000);
+        
+        var $newOption = $("<option selected='selected'></option>").val(data[0].id_pelanggan).text(data[0].nm_pelanggan)
+        $("[name='id_pelanggan']").append($newOption).trigger('change');
+        
+        $("[name='jumlah_pembelian']").val(data[0].jumlah_pembelian)
+        
+      }
+    })
+
 
     $("#modal_add .modal-title").text('Edit Data')
-    $("[name='id_penjualan_tiket']").val(data.id_penjualan_tiket)
-    $("[name='nm_jenis_bus']").val(data.nm_jenis_bus)
     $("#modal_add").modal('show')
   }
 
