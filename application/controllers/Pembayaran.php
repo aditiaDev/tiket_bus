@@ -140,7 +140,6 @@ class Pembayaran extends CI_Controller {
 
   public function saveDataFront(){
     
-    
     $this->load->library('form_validation');
     $this->form_validation->set_rules('id_penjualan_tiket', 'ID Penjualan tiket', 'required|is_unique[tb_pembayaran_tiket.id_penjualan_tiket]');
     $this->form_validation->set_rules('nominal', 'Nominal Bayar', 'required');
@@ -228,6 +227,47 @@ class Pembayaran extends CI_Controller {
     $this->db->delete('tb_pembayaran_tiket');
 
     $output = array("status" => "success", "message" => "Data Berhasil di Hapus");
+    echo json_encode($output);
+  }
+
+  public function sendNotif(){
+    $data = $this->db->query("
+      SELECT A.id_penjualan_tiket, B.no_pelanggan, B.nm_pelanggan, B.tgl_keberangkatan FROM tb_pembayaran_tiket A
+      INNER JOIN tb_penjualan_tiket B ON A.id_penjualan_tiket = B.id_penjualan_tiket
+      WHERE A.id_pembayaran='".$this->input->post('id_pembayaran')."'
+    ")->result_array();
+
+    $no_pelanggan = $data[0]['no_pelanggan'];
+    $nm_pelanggan = $data[0]['nm_pelanggan'];
+    $tgl_keberangkatan = $data[0]['tgl_keberangkatan'];
+    $id_penjualan_tiket = $data[0]['id_penjualan_tiket'];
+
+    $this->db->query("
+      UPDATE tb_penjualan_tiket SET notif_wa='TERKIRIM' WHERE id_penjualan_tiket = '".$id_penjualan_tiket."'
+    ");
+
+    $userkey = "8jhyem";
+    $passkey = "n65hmpn9lo";
+    $url = "https://console.zenziva.net/wareguler/api/sendWA/";
+
+    $curlHandle = curl_init();
+    curl_setopt($curlHandle, CURLOPT_URL, $url);
+    curl_setopt($curlHandle, CURLOPT_HEADER, 0);
+    curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curlHandle, CURLOPT_TIMEOUT, 30);
+    curl_setopt($curlHandle, CURLOPT_POST, 1);
+    curl_setopt($curlHandle, CURLOPT_POSTFIELDS, array(
+        'userkey' => $userkey,
+        'passkey' => $passkey,
+        'to' => $no_pelanggan,
+        'message' => "Pelanggan ".$nm_pelanggan." Yth. Kami dari PO Berlian, mengingatkan keberangkatan Bus anda pada ".$tgl_keberangkatan.". Mohon untuk tidak lupa membawa tiket anda. Terima kasih, Salam"
+    ));
+    $results = json_decode(curl_exec($curlHandle), true);
+    curl_close($curlHandle);
+
+    $output = array("status" => "success", "message" => "Pesan Telah Terkirim");
     echo json_encode($output);
   }
 

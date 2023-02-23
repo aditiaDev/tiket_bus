@@ -24,7 +24,7 @@
                   <th>ID Pembayaran</th>
                   <th>Tanggal Bayar</th>
                   <th>ID Tiket</th>
-                  <th>Jumlah Pembelian</th>
+                  <th>Jumlah</th>
                   <th>Harga Tiket</th>
                   <th>Total Bayar</th>
                   <th>Bukti Pembayaran</th>
@@ -193,7 +193,8 @@
           { "data": null, 
             "render" : function(data){
               if(data.status_validasi == "TERVALIDASI"){
-                return "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button>"
+                return "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button> "+
+                "<button class='btn btn-sm btn-success' onclick='sendNotif(\""+data.id_pembayaran+"\");'><i class='fas fa-paper-plane'></i> Send WA</button>"
               }else{
                 return "<button class='btn btn-sm btn-warning' onclick='verifyData(\""+data.id_pembayaran+"\");'><i class='fas fa-edit'></i> Verifikasi</button> "+
                 "<button class='btn btn-sm btn-danger' onclick='deleteData(\""+data.id_pembayaran+"\");'><i class='fas fa-trash'></i> Delete</button>"
@@ -295,6 +296,29 @@
             toastr.info(data.message)
             
 
+            REFRESH_DATA()
+
+          }else{
+            toastr.error(data.message)
+          }
+        }
+    })
+  }
+
+  function sendNotif(id_data){
+    if(!confirm('Send WA Notif?')) return
+
+    urlPost = "<?php echo site_url('pembayaran/sendNotif') ?>";
+    formData = "id_pembayaran="+id_data
+    $.ajax({
+        url: urlPost,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        success: function(data){
+          // console.log(data)
+          if (data.status == "success") {
+            toastr.info(data.message)
             REFRESH_DATA()
 
           }else{

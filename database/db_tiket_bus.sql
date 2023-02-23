@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 23 Feb 2023 pada 21.27
+-- Waktu pembuatan: 23 Feb 2023 pada 22.01
 -- Versi server: 10.4.10-MariaDB
 -- Versi PHP: 7.3.12
 
@@ -150,6 +150,25 @@ INSERT INTO `tb_jenis_bus` (`id_jenis_bus`, `nm_jenis_bus`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `tb_kategori_bus`
+--
+
+CREATE TABLE `tb_kategori_bus` (
+  `id_kategori` varchar(10) NOT NULL,
+  `nm_kategori` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_kategori_bus`
+--
+
+INSERT INTO `tb_kategori_bus` (`id_kategori`, `nm_kategori`) VALUES
+('AKAP', 'Angkutan Antarkota Antarprovinsi'),
+('AKDP', 'Angkutan Antarkota Dalam Provinsi');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `tb_parameter`
 --
 
@@ -271,7 +290,7 @@ CREATE TABLE `tb_penjualan_tiket` (
 INSERT INTO `tb_penjualan_tiket` (`id_penjualan_tiket`, `id_tiket_bus`, `id_pelanggan`, `nm_pelanggan`, `no_pelanggan`, `tgl_pembelian`, `tgl_keberangkatan`, `jumlah_pembelian`, `jenis_penjualan_tiket`, `status_tiket`, `notif_wa`) VALUES
 ('J20230100001', '20230100001', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-15 09:19:03', '2023-01-18 14:18:55', 1, 'OFFLINE', 'BELUM SCAN', NULL),
 ('J20230100002', '20230100003', 'P2300000', 'SAYA', '085643520576', '2023-01-27 13:57:14', '2023-02-14 09:00:00', 2, 'OFFLINE', 'SUDAH SCAN', 'TERKIRIM'),
-('J20230100003', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-28 20:53:51', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN', NULL),
+('J20230100003', '20230100002', 'P2300001', 'PELANGGAN 1', '085643520576', '2023-01-28 20:53:51', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN', 'TERKIRIM'),
 ('J20230100004', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-30 05:23:32', '2023-01-20 04:18:55', 3, 'ONLINE', 'BELUM SCAN', NULL),
 ('J20230100005', '20230100002', 'P2300001', 'PELANGGAN 1', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'ONLINE', 'BELUM SCAN', NULL),
 ('J20230100006', '20230100002', 'P2300000', 'Painem', '08134558891', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN', NULL),
@@ -395,6 +414,12 @@ ALTER TABLE `tb_item_penilaian`
 --
 ALTER TABLE `tb_jenis_bus`
   ADD PRIMARY KEY (`id_jenis_bus`);
+
+--
+-- Indeks untuk tabel `tb_kategori_bus`
+--
+ALTER TABLE `tb_kategori_bus`
+  ADD PRIMARY KEY (`id_kategori`);
 
 --
 -- Indeks untuk tabel `tb_parameter`

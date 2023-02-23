@@ -36,6 +36,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="<?php echo base_url("kategori_bus/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="KATEGORI_BUS"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Kategori Bus</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="<?php echo base_url("bus/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="BUS"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Bus</p>
