@@ -132,7 +132,15 @@ class Kepuasan extends CI_Controller {
 
     $jml_pertanyaan = count($parameter);
     $nilai_sevqual = $tot_sevqual / $jml_pertanyaan;
-    $ket = "<br>Nilai Servqual = ".number_format($nilai_sevqual)."%";
+
+    $dt = $this->db->query("
+      SELECT B.no_pol, A.tujuan, Date(A.tgl_keberangkatan) tgl_keberangkatan, a.tujuan FROM tb_tiket_bus A
+      INNER JOIN tb_bus B ON A.id_bus = B.id_bus
+      WHERE A.id_tiket_bus='".$id_tiket_bus."'
+    ")->result_array();
+
+    $ket = "<br>Nilai Servqual = ".number_format($nilai_sevqual)."%<br>
+            <b>Hasil Penilaian Kepuasan Pelanggan pada Bus ".$dt[0]['no_pol'].", Tujuan ".$dt[0]['tujuan'].", Tgl Keberangkatan".$dt[0]['tgl_keberangkatan']." mendapatkan hasil nilai: </b><h3>".number_format($nilai_sevqual)." % dari 100%</h3>";
     $input = "<input type='hidden' name='nilai_sevqual' value='".number_format($nilai_sevqual)."' >";
     echo $html.$ket.$input;
 

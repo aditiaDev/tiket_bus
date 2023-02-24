@@ -142,7 +142,7 @@ class Jadwal_Tiket extends CI_Controller {
   	// echo json_encode($data);
 
     $dataList = $this->db->query('SELECT C.id_tiket_bus, A.nm_jenis_bus, B.id_bus, B.no_pol, C.lokasi_kumpul, 
-    C.tujuan, C.tgl_keberangkatan, c.jumlah_max, C.harga, C.tipe_tiket, A.id_jenis_bus
+    C.tujuan, C.tgl_keberangkatan, c.jumlah_max, C.harga, C.tipe_tiket, A.id_jenis_bus, C.kota_keberangkatan
     FROM tb_jenis_bus A
     INNER JOIN tb_bus B ON A.id_jenis_bus = B.id_jenis_bus
     INNER JOIN tb_tiket_bus C ON C.id_bus = B.id_bus')->result();
@@ -163,6 +163,7 @@ class Jadwal_Tiket extends CI_Controller {
       $data['data'][$no]['harga'] = $list->harga;
       $data['data'][$no]['tipe_tiket'] = $list->tipe_tiket;
       $data['data'][$no]['id_jenis_bus'] = $list->id_jenis_bus;
+      $data['data'][$no]['kota_keberangkatan'] = $list->kota_keberangkatan;
       $no++;
     }
 
@@ -213,8 +214,9 @@ class Jadwal_Tiket extends CI_Controller {
     $this->form_validation->set_rules('jumlah_max', 'Maximal Penumpang', 'required');
     $this->form_validation->set_rules('harga', 'Harga Tiket', 'required');
     $this->form_validation->set_rules('tipe_tiket', 'Tipe Tiket', 'required');
+    $this->form_validation->set_rules('kota_keberangkatan', 'kota_keberangkatan', 'required');
 
-
+    
     if($this->form_validation->run() == FALSE){
       // echo validation_errors();
       $output = array("status" => "error", "message" => validation_errors());
@@ -234,6 +236,7 @@ class Jadwal_Tiket extends CI_Controller {
               "harga" => $this->input->post('harga'),
               "tipe_tiket" => $this->input->post('tipe_tiket'),
               "tiket_scanned" => 0,
+              "kota_keberangkatan" => $this->input->post('kota_keberangkatan'),
             );
 
 
@@ -269,6 +272,7 @@ class Jadwal_Tiket extends CI_Controller {
       "jumlah_max" => $this->input->post('jumlah_max'),
       "harga" => $this->input->post('harga'),
       "tipe_tiket" => $this->input->post('tipe_tiket'),
+      "kota_keberangkatan" => $this->input->post('kota_keberangkatan'),
     );
 
 

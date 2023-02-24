@@ -47,7 +47,6 @@
                   <div class="form-group col-12 col-md-4">
                     <label for="" class="label">Jenis Tiket</label>
                     <select name="jenis_tiket" class="form-control">
-                      <option></option>
                       <option value="ANTAR KOTA">ANTAR KOTA</option>
                       <option value="WISATA">WISATA</option>
                     </select>
@@ -63,16 +62,23 @@
                 </div>
 
                 <div class="d-md-flex mt-2">
-                  <div class="form-group col-12 col-md-4">
+                  <div class="form-group col-12 col-md-6">
                     <label for="" class="label">Tanggal keberangkatan</label>
                     <input type="text" name="tgl_keberangkatan" 
                       onChange="ISI_TUJUAN()" class="form-control date" placeholder="Tanggal keberangkatan">
                   </div>
-                  <div class="form-group col-12 col-md-4">
+                  <div class="form-group col-12 col-md-6">
+                    <label for="" class="label">Kota Keberangkatan</label>
+                    <select class="form-control" name="kota_keberangkatan"></select>
+                  </div>
+                </div>
+
+                <div class="d-md-flex">
+                  <div class="form-group col-12 col-md-6">
                     <label for="" class="label">Tujuan</label>
                     <select class="form-control select2" name="tujuan" onChange="ISI_JENISBUS()"></select>
                   </div>
-                  <div class="form-group col-12 col-md-4">
+                  <div class="form-group col-12 col-md-6">
                     <label for="" class="label">Armada</label>
                     <select class="form-control" name="id_jenis_bus" onChange="ISI_BUS()"></select>
                   </div>
@@ -86,6 +92,17 @@
                   <div class="form-group col-12 col-md-6">
                     <label for="" class="label">Jumlah Penumpang</label>
                     <input type="text" class="form-control" name="jumlah_pembelian" placeholder="Jumlah Tiket">
+                  </div>
+                </div>
+
+                <div class="d-md-flex">
+                  <div class="form-group col-12 col-md-6">
+                    <label for="" class="label">Maksimal Kursi</label>
+                    <input type="text" class="form-control" name="max_kursi" readonly placeholder="Maksimal Kursi">
+                  </div>
+                  <div class="form-group col-12 col-md-6">
+                    <label for="" class="label">Kursi Kosong</label>
+                    <input type="text" class="form-control" name="kursi_kosong" readonly placeholder="Kursi Kosong">
                   </div>
                 </div>
 
@@ -399,6 +416,25 @@ var timer = null
         $("[name='tujuan']").html(row)
       }
     })
+
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getKotaBerangkat') ?>",
+      type: "POST",
+      data: {
+        tgl_berangkat: $("[name='tgl_keberangkatan']").val(),
+        jenis_tiket: $("[name='jenis_tiket']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        // console.log(data)
+        var rows = "<option></option>"
+        $.map( data['data'], function( val, i ) {
+          rows += "<option value='"+val.kota_keberangkatan+"'>"+val.kota_keberangkatan+"</option>"
+          
+        });
+        $("[name='kota_keberangkatan']").html(rows)
+      }
+    })
     
   }
 
@@ -456,11 +492,23 @@ var timer = null
       success: function(data){
         // console.log(data['data'])
         $("[name='harga_tiket']").val(data['data'][0]['harga'])
+        $("[name='max_kursi']").val(data['data'][0]['jumlah_max'])
+        $("[name='kursi_kosong']").val(data['data'][0]['kursi_kosong'])
       }
     })
   }
 
   $("[name='jumlah_pembelian']").change(function(){
+    var jumlah_pembelian = parseInt($("[name='jumlah_pembelian']").val())
+    var kosong = parseInt($("[name='kursi_kosong']").val())
+
+    if(jumlah_pembelian > kosong){
+      alert('Pemesanan melampaui Jumlah Kursi Kosong')
+      $("#btnOrder").attr('disabled', true)
+      return
+    }
+    $("#btnOrder").attr('disabled', false)
+
     var nominal = parseInt($("[name='jumlah_pembelian']").val()) * parseInt($("[name='harga_tiket']").val())
     $("[name='nominal']").val(nominal)
     

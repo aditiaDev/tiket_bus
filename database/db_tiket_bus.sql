@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 23 Feb 2023 pada 22.01
+-- Waktu pembuatan: 24 Feb 2023 pada 15.34
 -- Versi server: 10.4.10-MariaDB
 -- Versi PHP: 7.3.12
 
@@ -342,6 +342,7 @@ INSERT INTO `tb_saran` (`id_saran`, `id_penjualan_tiket`, `saran`) VALUES
 CREATE TABLE `tb_tiket_bus` (
   `id_tiket_bus` varchar(25) NOT NULL,
   `id_bus` varchar(25) DEFAULT NULL,
+  `kota_keberangkatan` varchar(50) DEFAULT NULL,
   `lokasi_kumpul` varchar(100) DEFAULT NULL,
   `tujuan` varchar(100) DEFAULT NULL,
   `tgl_keberangkatan` datetime DEFAULT NULL,
@@ -355,11 +356,11 @@ CREATE TABLE `tb_tiket_bus` (
 -- Dumping data untuk tabel `tb_tiket_bus`
 --
 
-INSERT INTO `tb_tiket_bus` (`id_tiket_bus`, `id_bus`, `lokasi_kumpul`, `tujuan`, `tgl_keberangkatan`, `jumlah_max`, `harga`, `tipe_tiket`, `tiket_scanned`) VALUES
-('20230100001', 'BS000001', 'Terminal Jati', 'Purwokerto', '2023-01-18 14:18:55', 50, 50000, 'ANTAR KOTA', 0),
-('20230100002', 'BS000002', 'Terminal Jati', 'Yogyakarta', '2023-02-14 04:18:55', 52, 60000, 'ANTAR KOTA', 0),
-('20230100003', 'BS000002', 'Garasi PO. Bus', 'Yogyakarta', '2023-02-14 09:00:00', 52, 60000, 'WISATA', 2),
-('20230100004', 'BS000002', 'Universitas Muria Kudus (UMK)', 'KKL ke Jakarta', '2023-01-31 07:00:00', 52, 600000, 'WISATA', 0);
+INSERT INTO `tb_tiket_bus` (`id_tiket_bus`, `id_bus`, `kota_keberangkatan`, `lokasi_kumpul`, `tujuan`, `tgl_keberangkatan`, `jumlah_max`, `harga`, `tipe_tiket`, `tiket_scanned`) VALUES
+('20230100001', 'BS000001', 'KUDUS', 'Terminal Jati', 'Purwokerto', '2023-01-18 14:18:55', 50, 50000, 'ANTAR KOTA', 0),
+('20230100002', 'BS000002', 'KUDUS', 'Terminal Jati', 'Yogyakarta', '2023-02-14 04:18:55', 52, 60000, 'ANTAR KOTA', 0),
+('20230100003', 'BS000002', 'KUDUS', 'Garasi PO. Bus', 'Yogyakarta', '2023-02-14 09:00:00', 52, 60000, 'WISATA', 2),
+('20230100004', 'BS000002', 'KUDUS', 'Universitas Muria Kudus (UMK)', 'KKL ke Jakarta', '2023-01-31 07:00:00', 52, 600000, 'WISATA', 0);
 
 -- --------------------------------------------------------
 

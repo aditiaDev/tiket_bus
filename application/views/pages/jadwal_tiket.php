@@ -29,6 +29,7 @@
                   <th>Tipe Tiket</th>
                   <th>Jenis Bus</th>
                   <th>Nopol</th>
+                  <th>Kota Keberangkatan</th>
                   <th>Titik Kumpul</th>
                   <th>Tujuan</th>
                   <th>Waktu Keberangkatan</th>
@@ -80,10 +81,20 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
+                      <label>Kota Keberangkatan</label>
+                      <input type="text" class="form-control" name="kota_keberangkatan">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
                       <label>Titik Kumpul</label>
                       <input type="text" class="form-control" name="lokasi_kumpul">
                     </div>
                   </div>
+                  
+                </div>
+
+                <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>Tujuan</label>
@@ -257,7 +268,7 @@
       "columns": [
           { "data": "id_tiket_bus" },{ "data": "tipe_tiket" },
           { "data": "nm_jenis_bus" },
-          { "data": "no_pol" },{ "data": "lokasi_kumpul" },{ "data": "tujuan" },{ "data": "tgl_keberangkatan" },
+          { "data": "no_pol" },{ "data": "kota_keberangkatan" },{ "data": "lokasi_kumpul" },{ "data": "tujuan" },{ "data": "tgl_keberangkatan" },
           { "data": "jumlah_max", class : "text-right" },{ "data": "harga", class : "text-right" },
           { "data": null, 
             "render" : function(data){
@@ -313,6 +324,7 @@
     $("[name='tgl_keberangkatan']").val(data.tgl_keberangkatan)
     $("[name='harga']").val(data.harga)
     $("[name='tipe_tiket']").val(data.tipe_tiket)
+    $("[name='kota_keberangkatan']").val(data.kota_keberangkatan)
     
     $("#modal_add").modal('show')
   }

@@ -123,7 +123,9 @@ class Penjualan extends CI_Controller {
   }
 
   public function getHarga(){
-    $data['data'] = $this->db->query("SELECT harga from tb_tiket_bus WHERE id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->result(); 
+    $data['data'] = $this->db->query("SELECT A.harga, A.jumlah_max, 
+    A.jumlah_max - (select sum(jumlah_pembelian) from tb_penjualan_tiket where id_tiket_bus=A.id_tiket_bus) as kursi_kosong
+    from tb_tiket_bus A WHERE A.id_tiket_bus = '".$this->input->post('id_tiket_bus')."'")->result(); 
 
   	echo json_encode($data);
   }
@@ -278,6 +280,14 @@ class Penjualan extends CI_Controller {
 
   public function getTujuanBusAntarKota(){
     $data['data'] = $this->db->query("SELECT DISTINCT tujuan from tb_tiket_bus 
+    WHERE DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."' 
+    AND tipe_tiket='".$this->input->post('jenis_tiket')."'")->result(); 
+
+  	echo json_encode($data);
+  }
+
+  public function getKotaBerangkat(){
+    $data['data'] = $this->db->query("SELECT DISTINCT kota_keberangkatan from tb_tiket_bus 
     WHERE DATE(tgl_keberangkatan) = '".$this->input->post('tgl_berangkat')."' 
     AND tipe_tiket='".$this->input->post('jenis_tiket')."'")->result(); 
 
