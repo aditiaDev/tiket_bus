@@ -20,7 +20,7 @@ class Bus extends CI_Controller {
   public function getAllData(){
         
     $data['data'] = $this->db->query("SELECT b.id_bus, a.id_jenis_bus, a.nm_jenis_bus, b.no_pol, 
-    b.jumlah_kursi, b.foto, b.deskripsi FROM tb_jenis_bus a
+    b.jumlah_kursi, b.foto, b.deskripsi, b.id_kategori FROM tb_jenis_bus a
     inner JOIN tb_bus b ON a.id_jenis_bus = b.id_jenis_bus")->result(); 
 
   	echo json_encode($data);
@@ -30,6 +30,12 @@ class Bus extends CI_Controller {
     $data['data'] = $this->db->query("SELECT * from tb_jenis_bus")->result(); 
 
   	echo json_encode($data);
+  }
+
+  public function getKategoriBus(){
+    $data['data'] = $this->db->query("SELECT * from tb_kategori_bus ORDER BY nm_kategori")->result(); 
+
+    echo json_encode($data);
   }
 
   private function _do_upload(){
@@ -77,6 +83,7 @@ class Bus extends CI_Controller {
     
     $this->load->library('form_validation');
     $this->form_validation->set_rules('id_jenis_bus', 'Jenis Bus', 'required');
+    $this->form_validation->set_rules('id_kategori', 'Kategori Bus', 'required');
     $this->form_validation->set_rules('no_pol', 'No. Polisi', 'required|is_unique[tb_bus.no_pol]');
     $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required');
     $this->form_validation->set_rules('deskripsi', 'Deskripsii', 'required');
@@ -96,6 +103,7 @@ class Bus extends CI_Controller {
               "no_pol" => $this->input->post('no_pol'),
               "jumlah_kursi" => $this->input->post('jumlah_kursi'),
               "deskripsi" => $this->input->post('deskripsi'),
+              "id_kategori" => $this->input->post('id_kategori'),
             );
 
     if(!empty($_FILES['foto']['name'])){
@@ -115,6 +123,7 @@ class Bus extends CI_Controller {
     
     $this->load->library('form_validation');
     $this->form_validation->set_rules('id_jenis_bus', 'Jenis Bus', 'required');
+    $this->form_validation->set_rules('id_kategori', 'Kategori Bus', 'required');
     $this->form_validation->set_rules('no_pol', 'No. Polisi', 'required');
     $this->form_validation->set_rules('jumlah_kursi', 'Jumlah Kursi', 'required');
     $this->form_validation->set_rules('deskripsi', 'Deskripsii', 'required');
@@ -131,6 +140,7 @@ class Bus extends CI_Controller {
       "no_pol" => $this->input->post('no_pol'),
       "jumlah_kursi" => $this->input->post('jumlah_kursi'),
       "deskripsi" => $this->input->post('deskripsi'),
+      "id_kategori" => $this->input->post('id_kategori'),
     );
 
     if(!empty($_FILES['foto']['name'])){

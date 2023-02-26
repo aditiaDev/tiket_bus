@@ -30,6 +30,32 @@ class Report extends CI_Controller {
     $this->load->view('template/footer');
   }
 
+  public function kepuasanPeriod(){
+    $this->load->view('template/header');
+    $this->load->view('template/sidebar');
+    $this->load->view('pages/report_kepuasan_period');
+    $this->load->view('template/footer');
+  }
+
+  public function getKepuasanPeriod(){
+    if ($this->input->post('id_bus') == "ALL") {
+      $id_bus = '';
+    }else{
+      $id_bus = $this->input->post('id_bus');
+    }
+    
+    $data['data'] = $this->db->query("SELECT B.no_pol, B.id_kategori, DATE(A.tgl_keberangkatan) tgl_keberangkatan, A.kota_keberangkatan, A.tujuan, 
+    (select sum(jumlah_pembelian)  from tb_penjualan_tiket where id_tiket_bus = A.id_tiket_bus) jumlah_pelanggan,
+     c.nilai_kepuasan
+    FROM tb_tiket_bus A
+    INNER JOIN tb_bus B ON A.id_bus = B.id_bus
+    INNER JOIN tb_penilaian_kepuasan C ON A.id_tiket_bus = C.id_tiket_bus
+    WHERE B.id_bus LIKE '%".$id_bus."%'
+    AND DATE(A.tgl_keberangkatan) BETWEEN '".$this->input->post('start_date')."' AND '".$this->input->post('end_date')."'")->result();
+
+    echo json_encode($data);
+  }
+
   public function getPenjualan(){
     $data['data'] = $this->db->query("
       select A.id_penjualan_tiket, A.id_tiket_bus, B.tujuan, B.tgl_keberangkatan,  
@@ -115,6 +141,29 @@ class Report extends CI_Controller {
     $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L', 'margin_left' => '5', 'margin_right' => '5']);
     $mpdf->setFooter('{PAGENO}');
     $html = $this->load->view('print/ctkPemesanan',$data, true);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output();
+  }
+
+  public function ctkKepuasanPeriod(){
+    if ($this->input->post('id_bus') == "ALL") {
+      $id_bus = '';
+    }else{
+      $id_bus = $this->input->post('id_bus');
+    }
+    
+    $data['data'] = $this->db->query("SELECT B.no_pol, B.id_kategori, DATE(A.tgl_keberangkatan) tgl_keberangkatan, A.kota_keberangkatan, A.tujuan, 
+    (select sum(jumlah_pembelian)  from tb_penjualan_tiket where id_tiket_bus = A.id_tiket_bus) jumlah_pelanggan,
+     c.nilai_kepuasan
+    FROM tb_tiket_bus A
+    INNER JOIN tb_bus B ON A.id_bus = B.id_bus
+    INNER JOIN tb_penilaian_kepuasan C ON A.id_tiket_bus = C.id_tiket_bus
+    WHERE B.id_bus LIKE '%".$id_bus."%'
+    AND DATE(A.tgl_keberangkatan) BETWEEN '".$this->input->post('start_date')."' AND '".$this->input->post('end_date')."'")->result_array();
+
+    $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L', 'margin_left' => '5', 'margin_right' => '5']);
+    $mpdf->setFooter('{PAGENO}');
+    $html = $this->load->view('print/ctkKepuasanPeriod',$data, true);
     $mpdf->WriteHTML($html);
     $mpdf->Output();
   }

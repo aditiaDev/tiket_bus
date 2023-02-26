@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Feb 2023 pada 15.34
--- Versi server: 10.4.10-MariaDB
--- Versi PHP: 7.3.12
+-- Waktu pembuatan: 26 Feb 2023 pada 07.50
+-- Versi server: 10.4.13-MariaDB
+-- Versi PHP: 7.3.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -34,18 +33,19 @@ CREATE TABLE `tb_bus` (
   `no_pol` varchar(12) DEFAULT NULL,
   `jumlah_kursi` int(11) DEFAULT NULL,
   `foto` text DEFAULT NULL,
-  `deskripsi` text DEFAULT NULL
+  `deskripsi` text DEFAULT NULL,
+  `id_kategori` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `tb_bus`
 --
 
-INSERT INTO `tb_bus` (`id_bus`, `id_jenis_bus`, `no_pol`, `jumlah_kursi`, `foto`, `deskripsi`) VALUES
-('2', 'JB000014', 'K 1234 KI', 50, 'bus1.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP'),
-('BS000001', 'JB000009', 'H 5432 OK', 50, 'bus2.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP'),
-('BS000002', 'JB000009', 'F 6772 KHQ', 52, 'bus3.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP'),
-('BS000003', 'JB000009', 'K 1234 JK', 40, '1676789625679.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP\r\nKursi Nyaman');
+INSERT INTO `tb_bus` (`id_bus`, `id_jenis_bus`, `no_pol`, `jumlah_kursi`, `foto`, `deskripsi`, `id_kategori`) VALUES
+('2', 'JB000014', 'K 1234 KI', 50, 'bus1.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP', 'AKAP'),
+('BS000001', 'JB000009', 'H 5432 OK', 50, 'bus2.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP', 'AKAP'),
+('BS000002', 'JB000009', 'F 6772 KHQ', 52, 'bus3.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP', 'AKDP'),
+('BS000003', 'JB000009', 'K 1234 JK', 40, '1676789625679.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP\r\nKursi Nyaman', 'WISATA');
 
 -- --------------------------------------------------------
 
@@ -164,7 +164,8 @@ CREATE TABLE `tb_kategori_bus` (
 
 INSERT INTO `tb_kategori_bus` (`id_kategori`, `nm_kategori`) VALUES
 ('AKAP', 'Angkutan Antarkota Antarprovinsi'),
-('AKDP', 'Angkutan Antarkota Dalam Provinsi');
+('AKDP', 'Angkutan Antarkota Dalam Provinsi'),
+('WISATA', 'BUS PARIWISATA');
 
 -- --------------------------------------------------------
 

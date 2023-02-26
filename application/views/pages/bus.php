@@ -51,10 +51,19 @@
               </button>
             </div>
             <div class="modal-body">
-              
-                <div class="form-group">
-                  <label>Jenis Bus</label>
-                  <select name="id_jenis_bus" class="form-control"></select>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Jenis Bus</label>
+                      <select name="id_jenis_bus" class="form-control"></select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Kategori Bus</label>
+                      <select name="id_kategori" class="form-control"></select>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="row">
@@ -136,6 +145,18 @@
         console.log(data)
         $.map( data['data'], function( val, i ) {
           $("[name='id_jenis_bus']").append("<option value='"+val.id_jenis_bus+"'>"+val.nm_jenis_bus+"</option>")
+        });
+      }
+    })
+
+    $.ajax({
+      url: "<?php echo site_url('bus/getKategoriBus') ?>",
+      type: "GET",
+      dataType: "JSON",
+      success: function(data){
+        console.log(data)
+        $.map( data['data'], function( val, i ) {
+          $("[name='id_kategori']").append("<option value='"+val.id_kategori+"'>"+val.nm_kategori+"</option>")
         });
       }
     })
@@ -264,6 +285,7 @@
 
     $("#modal_add .modal-title").text('Edit Data')
     $("[name='id_jenis_bus']").val(data.id_jenis_bus)
+    $("[name='id_kategori']").val(data.id_kategori)
     $("[name='jumlah_kursi']").val(data.jumlah_kursi)
     $("[name='no_pol']").val(data.no_pol)
     $("[name='deskripsi']").val(data.deskripsi)

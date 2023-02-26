@@ -35,6 +35,8 @@ class Kepuasan extends CI_Controller {
   	echo json_encode($data);
   }
 
+  
+
   public function getTiket(){
     $data['data'] = $this->db->query("
       SELECT id_tiket_bus, tujuan, no_pol, DATE(A.tgl_keberangkatan) tgl_keberangkatan FROM `tb_tiket_bus` A

@@ -194,6 +194,12 @@
                   <p>Data Kepuasan Pelanggan</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url("report/kepuasanPeriod")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="KEPUASAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Kepuasan Pelanggan Period</p>
+                </a>
+              </li>
               
             </ul>
           </li>
