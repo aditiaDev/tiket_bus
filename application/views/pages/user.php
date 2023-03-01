@@ -66,6 +66,7 @@
                 <p>Level Akses</p>
                 <select class="form-control" name="level">
                   <option value="ADMIN">ADMIN</option>
+                  <option value="BENDAHARA">BENDAHARA</option>
                   <option value="DIREKTUR">DIREKTUR</option>
                   <option value="SEKERTARIS">SEKERTARIS</option>
                   <option value="PELANGGAN">PELANGGAN</option>

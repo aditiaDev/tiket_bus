@@ -18,7 +18,9 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <button class="btn btn-sm btn-info" style="margin-bottom: 10px;" id="add_data"><i class="fas fa-plus-circle"></i> Tambah</button>
+              <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
+                <button class="btn btn-sm btn-info" style="margin-bottom: 10px;" id="add_data"><i class="fas fa-plus-circle"></i> Tambah</button>
+              <?php } ?>
               <table id="tb_data" class="table table-bordered table-hover" style="font-size: 12px">
                 <thead>
                 <tr>
@@ -30,7 +32,9 @@
                   <th>Tgl Keberangkatan</th>
                   <th>Jumlah</th>
                   <th>Jenis Pembelian</th>
+                  <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
                   <th style="min-width: 120px;">Action</th>
+                  <?php } ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -257,6 +261,7 @@
           { "data": "id_penjualan_tiket" },
           { "data": "tgl_pembelian" },{ "data": "tujuan" },{ "data": "no_pol" },{ "data": "tgl_keberangkatan" },
           { "data": "jumlah_pembelian" },{ "data": "jenis_penjualan_tiket" },
+          <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
           { "data": null, 
             "render" : function(data){
               if(data.jenis_penjualan_tiket == "ONLINE"){
@@ -269,6 +274,7 @@
             },
             className: "text-center"
           },
+          <?php } ?>
       ]
     })
   }

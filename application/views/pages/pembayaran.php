@@ -17,7 +17,9 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <button class="btn btn-sm btn-info" style="margin-bottom: 10px;" id="add_data"><i class="fas fa-plus-circle"></i> Tambah</button>
+              <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
+                <button class="btn btn-sm btn-info" style="margin-bottom: 10px;" id="add_data"><i class="fas fa-plus-circle"></i> Tambah</button>
+              <?php } ?>
               <table id="tb_data" class="table table-bordered table-hover" style="font-size: 12px">
                 <thead>
                 <tr>
@@ -29,7 +31,9 @@
                   <th>Total Bayar</th>
                   <th>Bukti Pembayaran</th>
                   <th>Status</th>
+                  <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
                   <th style="min-width: 150px;">Action</th>
+                  <?php } ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -190,6 +194,7 @@
             className: "text-center"
           },
           { "data": "status_validasi" },
+          <?php if($this->session->userdata('level') != "BENDAHARA"){ ?>
           { "data": null, 
             "render" : function(data){
               if(data.status_validasi == "TERVALIDASI"){
@@ -203,6 +208,7 @@
             },
             className: "text-center"
           },
+          <?php } ?>
           // { "data": null, 
           //   "render" : function(data){
           //     return "<button class='btn btn-sm btn-warning' onclick='editData("+JSON.stringify(data)+");'><i class='fas fa-edit'></i> Edit</button> "+

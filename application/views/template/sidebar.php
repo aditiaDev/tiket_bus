@@ -155,6 +155,68 @@
             </a>
           </li>
 
+          <?php }elseif($this->session->userdata('level') == "BENDAHARA"){ ?>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Transaksi
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+              <a href="<?php echo base_url("penjualan/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PENJUALAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Penjualan Tiket</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url("pembayaran/")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMBAYARAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pembayaran Tiket</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-print"></i>
+              <p>
+                Laporan
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?php echo base_url("report/pemesanan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMESANAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Pemesanan Tiket</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url("report/pemesanan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMESANAN"){echo 'active';}?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Pembayaran</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?php echo base_url("login/logout")?>" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>
+                Sign Out
+              </p>
+            </a>
+          </li>
+
           <?php }else{ ?>
 
           <li class="nav-item">
