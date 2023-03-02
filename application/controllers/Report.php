@@ -138,6 +138,9 @@ class Report extends CI_Controller {
       order by A.tgl_keberangkatan, A.tgl_pembelian
     ")->result_array();
 
+    $data['period_start'] = $this->input->post('start_date');
+    $data['period_end'] = $this->input->post('end_date');
+
     $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L', 'margin_left' => '5', 'margin_right' => '5']);
     $mpdf->setFooter('{PAGENO}');
     $html = $this->load->view('print/ctkPemesanan',$data, true);

@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 26 Feb 2023 pada 07.50
--- Versi server: 10.4.13-MariaDB
--- Versi PHP: 7.3.19
+-- Waktu pembuatan: 02 Mar 2023 pada 14.03
+-- Versi server: 10.4.10-MariaDB
+-- Versi PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -374,7 +375,7 @@ CREATE TABLE `tb_user` (
   `username` varchar(25) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
   `nm_pengguna` varchar(35) DEFAULT NULL,
-  `level` enum('DIREKTUR','SEKERTARIS','ADMIN','PELANGGAN') DEFAULT NULL
+  `level` enum('DIREKTUR','SEKERTARIS','ADMIN','PELANGGAN','BENDAHARA') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -387,7 +388,8 @@ INSERT INTO `tb_user` (`id_user`, `username`, `password`, `nm_pengguna`, `level`
 ('U2300002', 'User', 'Password', 'Paijo', 'PELANGGAN'),
 ('U2300003', 'DIREKTUR', 'DIREKTUR', 'Berlian Direktur', 'DIREKTUR'),
 ('U2300004', 'SEKERTARIS', 'SEKERTARIS', 'BERLIAN SEKERTARIS', 'SEKERTARIS'),
-('U2300005', 'akuu', 'akuu', 'Akuu', 'PELANGGAN');
+('U2300005', 'akuu', 'akuu', 'Akuu', 'PELANGGAN'),
+('U2300006', 'BENDAHARA', 'BENDAHARA', 'Bendahara PO Berlian', 'BENDAHARA');
 
 --
 -- Indexes for dumped tables

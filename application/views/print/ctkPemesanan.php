@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Laporan Pemesanan</title>
+    <title>Laporan Penjualan</title>
 </head>
 <body>
  
 <div id="container">
-	<h3>Laporan Pemesanan</h3>
+	<h3>Laporan Penjualan Tiket</h3>
+  <p>Period : <?php echo $period_start." Sampai ".$period_end; ?></p>
     <table border="1" style="width:100%;font-size:12px;border: 1px solid #ddd;border-collapse: collapse;">
 	  	<thead>
 	  		<tr>
@@ -53,6 +54,26 @@
             </tr>
         </tfoot>
 	  </table>
+
+    <div style="width:100%">
+    <table border=0 style="margin-top:30px;margin-left:19cm;">
+      <tr>
+        <td style="text-align:center">Bendahara</td>
+        <td></td>
+        <td style="text-align:center">Direktur</td>
+      </tr>
+      <tr >
+        <td style="height:70px;"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="text-align:center">(....................................)</td>
+        <td></td>
+        <td style="text-align:center">(....................................)</td>
+      </tr>
+    </table>
+    </div>
  
 </div>
  

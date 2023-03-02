@@ -194,14 +194,7 @@
               <li class="nav-item">
                 <a href="<?php echo base_url("report/pemesanan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMESANAN"){echo 'active';}?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data Pemesanan Tiket</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="<?php echo base_url("report/pemesanan")?>" class="nav-link <?php if(strtoupper($this->uri->segment(1))=="PEMESANAN"){echo 'active';}?>">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Pembayaran</p>
+                  <p>Data Penjualan Tiket</p>
                 </a>
               </li>
               

@@ -7,7 +7,7 @@
           <div class="col-12">
           <div class="card" style="margin-top: 1rem">
               <div class="card-header">
-                <h3 class="card-title">Data Pemesanan Tiket</h3>
+                <h3 class="card-title">Data Penjualan Tiket</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
