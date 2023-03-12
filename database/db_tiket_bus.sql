@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 02 Mar 2023 pada 14.03
+-- Waktu pembuatan: 13 Mar 2023 pada 00.52
 -- Versi server: 10.4.10-MariaDB
 -- Versi PHP: 7.3.12
 
@@ -47,6 +47,27 @@ INSERT INTO `tb_bus` (`id_bus`, `id_jenis_bus`, `no_pol`, `jumlah_kursi`, `foto`
 ('BS000001', 'JB000009', 'H 5432 OK', 50, 'bus2.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP', 'AKAP'),
 ('BS000002', 'JB000009', 'F 6772 KHQ', 52, 'bus3.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP', 'AKDP'),
 ('BS000003', 'JB000009', 'K 1234 JK', 40, '1676789625679.jpg', 'Bus Normal Decker Dengan Fasilitas AC dan TV serta charger HP\r\nKursi Nyaman', 'WISATA');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_dtl_penjualan`
+--
+
+CREATE TABLE `tb_dtl_penjualan` (
+  `id_dtl_penjualan` int(11) NOT NULL,
+  `id_penjualan_tiket` varchar(25) NOT NULL,
+  `kursi` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_dtl_penjualan`
+--
+
+INSERT INTO `tb_dtl_penjualan` (`id_dtl_penjualan`, `id_penjualan_tiket`, `kursi`) VALUES
+(1, 'J20230300001', 3),
+(2, 'J20230300001', 2),
+(3, 'J20230300001', 8);
 
 -- --------------------------------------------------------
 
@@ -303,7 +324,8 @@ INSERT INTO `tb_penjualan_tiket` (`id_penjualan_tiket`, `id_tiket_bus`, `id_pela
 ('J20230100011', '20230100002', 'P2300000', 'Agus', '08134558894', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 1, 'OFFLINE', 'BELUM SCAN', NULL),
 ('J20230100012', '20230100002', 'P2300000', 'Siti', '08134558895', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 3, 'OFFLINE', 'BELUM SCAN', NULL),
 ('J20230100013', '20230100002', 'P2300000', 'Patrix', '08134558896', '2023-01-30 05:25:31', '2023-01-20 04:18:55', 2, 'OFFLINE', 'BELUM SCAN', NULL),
-('J20230200001', '20230100002', 'P2300001', 'Lastri', '085643520576', '2023-02-13 12:21:28', '2023-02-14 04:18:55', 1, 'ONLINE', '', 'TERKIRIM');
+('J20230200001', '20230100002', 'P2300001', 'Lastri', '085643520576', '2023-02-13 12:21:28', '2023-02-14 04:18:55', 1, 'ONLINE', '', 'TERKIRIM'),
+('J20230300001', '20230100002', 'P2300001', 'Lastri', '08134558891', '2023-03-13 06:40:36', '2023-02-14 04:18:55', 3, 'ONLINE', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -402,6 +424,12 @@ ALTER TABLE `tb_bus`
   ADD PRIMARY KEY (`id_bus`);
 
 --
+-- Indeks untuk tabel `tb_dtl_penjualan`
+--
+ALTER TABLE `tb_dtl_penjualan`
+  ADD PRIMARY KEY (`id_dtl_penjualan`);
+
+--
 -- Indeks untuk tabel `tb_indikator_kepuasan`
 --
 ALTER TABLE `tb_indikator_kepuasan`
@@ -476,6 +504,12 @@ ALTER TABLE `tb_user`
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_dtl_penjualan`
+--
+ALTER TABLE `tb_dtl_penjualan`
+  MODIFY `id_dtl_penjualan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_saran`

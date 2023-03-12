@@ -352,6 +352,15 @@ class Penjualan extends CI_Controller {
 
     $this->db->insert('tb_penjualan_tiket', $data);
 
+    foreach($this->input->post('kursi') as $key => $each){
+      $dataDtl = array(
+        "id_penjualan_tiket" => $id,
+        "kursi" => $this->input->post('kursi')[$key],
+      );
+
+      $this->db->insert('tb_dtl_penjualan', $dataDtl);
+    }
+
     $output = array("status" => "success", "message" => "Data Berhasil Disimpan, Nomor Ticket: ".$id);
     echo json_encode($output);
 
@@ -393,6 +402,17 @@ class Penjualan extends CI_Controller {
     }
 
     echo json_encode($output);
+  }
+
+  public function getKursiBooked(){
+    $data['data'] = $this->db->query("SELECT kursi from tb_dtl_penjualan
+    WHERE id_penjualan_tiket IN (
+      SELECT a.id_penjualan_tiket FROM `tb_penjualan_tiket` a
+      inner join tb_tiket_bus b on a.id_tiket_bus = b.id_tiket_bus
+      where b.id_tiket_bus = '".$this->input->post('id_tiket_bus')."'
+    )")->result();
+
+    echo json_encode($data);
   }
 
 }

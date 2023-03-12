@@ -112,6 +112,9 @@
                     <label for="" class="label">Jumlah Penumpang</label><br>
                     <button type="button" id="pilihKursi" class="btn btn-sm btn-success">Pilih Kursi</button>
                     <input type="hidden" class="form-control" name="jumlah_pembelian" placeholder="Jumlah Tiket">
+                    <div id="inputMuncul">
+
+                    </div>
                   </div>
                 </div>
 
@@ -713,11 +716,25 @@ var timer = null
   }
 
   $("#pilihKursi").click(function(){
+
+    $.ajax({
+      url: "<?php echo site_url('penjualan/getKursiBooked') ?>",
+      type: "POST",
+      data: {
+        id_tiket_bus: $("[name='id_tiket_bus']").val()
+      },
+      dataType: "JSON",
+      success: function(data){
+        console.log(data)
+      }
+    })
+
     $("#modal_add").modal('show')
   })
 
   function pilihSheet(sheet){
     $('#kursine').append('<span class="sheetSelect">'+sheet+'</span><br>')
+    $("#inputMuncul").append('<input type="hidden" name="kursi[]" value="'+sheet+'" >')
     $("#sheet_"+sheet).attr('disabled',true)
     $("#sheet_"+sheet).toggleClass("btn-info")
   }
