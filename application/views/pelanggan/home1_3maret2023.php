@@ -1,23 +1,4 @@
 <link rel="stylesheet" href="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.css'); ?>">
-<style>
-  table .rotate{
-    writing-mode: vertical-rl;
-  }
-
-  .tb_denah tr td{
-    width: 50px;
-    height: 50px;
-    text-align: center;
-  }
-
-  .btn-kursi{
-    width: 40px;
-    height: 40px;
-  }
-
-
-</style>
-
 <div class="hero-wrap" style="background-image: url('<?php echo base_url('/assets/front/images/') ?>bus.jpg ');" data-stellar-background-ratio="0.5">
 <div class="overlay">
 </div>
@@ -109,9 +90,8 @@
                     <select class="form-control" name="id_tiket_bus" onChange="ISI_HARGA()"></select>
                   </div>
                   <div class="form-group col-12 col-md-6">
-                    <label for="" class="label">Jumlah Penumpang</label><br>
-                    <button type="button" id="pilihKursi" class="btn btn-sm btn-success">Pilih Kursi</button>
-                    <input type="hidden" class="form-control" name="jumlah_pembelian" placeholder="Jumlah Tiket">
+                    <label for="" class="label">Jumlah Penumpang</label>
+                    <input type="text" class="form-control" name="jumlah_pembelian" placeholder="Jumlah Tiket">
                   </div>
                 </div>
 
@@ -389,81 +369,6 @@
   </div>
 </div>
 </section>
-
-<div class="modal fade" id="modal_add">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <form id="FRM_DATA">
-        <div class="modal-header">
-          <h4 class="modal-title">Data</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          
-          <div class="row">
-            <div class="col-md-8">
-              <table border="1" style="writing-mode: vertical-rl;" class="tb_denah">
-                <tbody>
-                  <tr>
-                    <td colspan="6">Depan</td>
-                  </tr>
-                  <?php
-                    $line = 12;
-                    $no=0;
-                    for($i=1;$i<=$line;$i++){
-                      if($i < $line){
-
-                        $td="";
-                        for($j=1;$j<=4;$j++){
-                          $no++;
-                          $td .= '<td><button type="button" id="sheet_'.$no.'" onclick="pilihSheet(\''.$no.'\')" class="btn btn-sm btn-info btn-kursi">'.$no.'</button></td>';
-                          if($j == 2){
-                            $td .= '<td style="width:40px;" colspan="2"></td>';
-                          }
-                        }
-                        echo '<tr>
-                              '.$td.'
-                              </tr>';
-                      }else{
-                        $td="";
-                        for($j=1;$j<=6;$j++){
-                          $no++;
-                          $td .= '<td><button type="button" id="sheet_'.$no.'" onclick="pilihSheet(\''.$no.'\')" class="btn btn-sm btn-info btn-kursi">'.$no.'</button></td>';
-                        }
-                        echo '<tr>
-                              '.$td.'
-                              </tr>';
-                      }
-                  
-                    }
-                  ?>
-                    
-                    <tr>
-                      <td colspan="6">Belakang</td>
-                    </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="col-md-4" id="kursine">
-              Sheets Selected: <br>
-            </div>
-          </div>
-            
-        </div>
-          
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveKursi">Save changes</button>
-        </div>
-      </form>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
 <script src="<?php echo base_url('/assets/front/js/jquery.min.js'); ?>"></script>
 <script src="<?php echo base_url('/assets/adminlte/plugins/flatpickr/flatpickr.js'); ?>"></script>
 <script>
@@ -711,35 +616,5 @@ var timer = null
       }
     })
   }
-
-  $("#pilihKursi").click(function(){
-    $("#modal_add").modal('show')
-  })
-
-  function pilihSheet(sheet){
-    $('#kursine').append('<span class="sheetSelect">'+sheet+'</span><br>')
-    $("#sheet_"+sheet).attr('disabled',true)
-    $("#sheet_"+sheet).toggleClass("btn-info")
-  }
-
-  $("#saveKursi").click(function(){
-    var jml = $('.sheetSelect').length
-    $("[name='jumlah_pembelian']").val(jml)
-
-    var jumlah_pembelian = parseInt($("[name='jumlah_pembelian']").val())
-    var kosong = parseInt($("[name='kursi_kosong']").val())
-
-    if(jumlah_pembelian > kosong){
-      alert('Pemesanan melampaui Jumlah Kursi Kosong')
-      $("#btnOrder").attr('disabled', true)
-      return
-    }
-    $("#btnOrder").attr('disabled', false)
-
-    var nominal = parseInt($("[name='jumlah_pembelian']").val()) * parseInt($("[name='harga_tiket']").val())
-    $("[name='nominal']").val(nominal)
-
-    $("#modal_add").modal('hide')
-  })
 
 </script>
