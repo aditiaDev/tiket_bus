@@ -40,6 +40,11 @@
           <td><?php echo $row['jumlah_pembelian']; ?></td>
         </tr>
         <tr>
+          <td>Nomor Kursi</td>
+          <td>:</td>
+          <td><?php echo $row['kursi']; ?></td>
+        </tr>
+        <tr>
           <td>Tgl Bayar</td>
           <td>:</td>
           <td><?php echo $row['tgl_bayar']; ?></td>

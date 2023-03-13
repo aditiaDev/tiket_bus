@@ -449,8 +449,9 @@
                 </tbody>
               </table>
             </div>
-            <div class="col-md-4" id="kursine">
+            <div class="col-md-4" >
               Sheets Selected: <br>
+              <span id="kursine"></span>
             </div>
           </div>
             
@@ -717,6 +718,9 @@ var timer = null
 
   $("#pilihKursi").click(function(){
 
+    $('#kursine br').remove()
+    $('.sheetSelect').remove()
+
     $.ajax({
       url: "<?php echo site_url('penjualan/getKursiBooked') ?>",
       type: "POST",
@@ -725,7 +729,13 @@ var timer = null
       },
       dataType: "JSON",
       success: function(data){
-        console.log(data)
+        // console.log(data)
+        $.each(data['data'], function(i, val){
+          console.log(val)
+          $("#sheet_"+val.kursi).attr('disabled',true)
+          $("#sheet_"+val.kursi).removeClass('btn-info')
+          $("#sheet_"+val.kursi).addClass('btn-danger')
+        })
       }
     })
 

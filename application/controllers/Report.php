@@ -97,7 +97,11 @@ class Report extends CI_Controller {
     $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
 
     $data['data'] = $this->db->query("SELECT A.id_penjualan_tiket, A.nm_pelanggan, A.tgl_keberangkatan,  
-    A.jumlah_pembelian, B.tgl_bayar, B.status_validasi, B.nominal
+    A.jumlah_pembelian, B.tgl_bayar, B.status_validasi, B.nominal,
+    (
+      SELECT GROUP_CONCAT(kursi SEPARATOR ', ') as kursi FROM tb_dtl_penjualan WHERE id_penjualan_tiket=A.id_penjualan_tiket
+      GROUP BY id_penjualan_tiket
+    ) kursi
     FROM `tb_penjualan_tiket` A
     LEFT JOIN tb_pembayaran_tiket B ON A.id_penjualan_tiket = B.id_penjualan_tiket
     WHERE A.id_penjualan_tiket='".$this->input->post('id_tiket')."'")->result_array();
